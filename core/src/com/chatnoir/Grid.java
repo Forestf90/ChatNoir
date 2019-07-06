@@ -2,13 +2,15 @@ package com.chatnoir;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import java.util.Random;
 
 public class Grid {
 
-    private boolean[][] map;
+    private Sector[][] map;
 
     int WIDTH =40;
     int HEIGHT =40;
@@ -19,7 +21,7 @@ public class Grid {
 
 
     public Grid(){
-        this.map = new boolean[13][13];
+        this.map = new Sector[13][13];
         calculateBorder();
         init_map();
     }
@@ -29,7 +31,10 @@ public class Grid {
 
         for(int i=0; i<map.length; i++){
             for(int j=0; j<map[i].length; j++){
-                map[i][j] = true;
+                map[i][j] = new Sector();
+                map[i][j].x=i *WIDTH+(PADDING_W+(j%2*WIDTH/2)+WIDTH/2);
+                map[i][j].y = j* HEIGHT+PADDING_H+HEIGHT/2+BORDER;
+                map[i][j].radius =RADIUS;
             }
         }
         Random r= new Random();
@@ -37,11 +42,11 @@ public class Grid {
         for(int i=0 ;i<BLOCKS;i++) {
             x= r.nextInt(11);
             y=r.nextInt(11);
-            if((x==7 && y==7) || !map[y][x]){
+            if((x==7 && y==7) || !map[y][x].open){
                 i--;
                 continue;
             }
-            map[x][y]=false;
+            map[x][y].open=false;
 
         }
     }
@@ -61,23 +66,25 @@ public class Grid {
 
     }
 
-    public void draw(ShapeRenderer sr){
+    public void draw(ShapeRenderer sr, SpriteBatch batch, Cat cat){
 
 
 
-
+        sr.begin(ShapeRenderer.ShapeType.Filled);
         for(int i=0; i<map.length; i++){
             for(int j=0; j<map[i].length; j++){
-                if(map[i][j]){
+                if(map[i][j].open){
                     sr.setColor(Color.valueOf("c7ea46"));
                 }else{
                     sr.setColor(Color.valueOf("718500"));
                 }
-                sr.circle(i *WIDTH+(PADDING_W+(j%2*WIDTH/2)+WIDTH/2),
-                        j* HEIGHT+PADDING_H+HEIGHT/2+BORDER, RADIUS);
+                sr.circle(map[i][j].x, map[i][j].y, map[i][j].radius);
 
             }
         }
+        sr.end();
+        batch.draw(cat.getTexture(), map[cat.posX][cat.posY].x,
+                map[cat.posX][cat.posY].y, WIDTH, HEIGHT);
 
     }
 

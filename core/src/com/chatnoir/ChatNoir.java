@@ -12,7 +12,7 @@ public class ChatNoir extends ApplicationAdapter {
 	SpriteBatch batch;
 	ShapeRenderer sr;
 	Grid grid;
-	
+	Cat cat;
 	@Override
 	public void create () {
 		loadData();
@@ -26,7 +26,7 @@ public class ChatNoir extends ApplicationAdapter {
 	}
 
 	private void loadData(){
-
+		cat= new Cat(new Texture("cat.png"));
 	}
 
 	@Override
@@ -38,10 +38,7 @@ public class ChatNoir extends ApplicationAdapter {
 				(Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
 
 		batch.begin();
-		sr.begin(ShapeRenderer.ShapeType.Filled);
-		//sr.setColor(Color.valueOf("c7ea46"));
-		grid.draw(sr);
-		sr.end();
+		grid.draw(sr, batch, cat);
 		batch.end();
 	}
 
