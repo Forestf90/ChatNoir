@@ -10,7 +10,7 @@ import java.util.Random;
 
 public class Grid {
 
-    private Sector[][] map;
+    public Sector[][] map;
 
     int WIDTH =40;
     int HEIGHT =40;
@@ -66,7 +66,7 @@ public class Grid {
 
     }
 
-    public void draw(ShapeRenderer sr, SpriteBatch batch, Cat cat){
+    public void draw(ShapeRenderer sr){
 
 
 
@@ -83,8 +83,8 @@ public class Grid {
             }
         }
         sr.end();
-        batch.draw(cat.getTexture(), map[cat.posX][cat.posY].x,
-                map[cat.posX][cat.posY].y, WIDTH, HEIGHT);
+//        batch.draw(cat.getTexture(), map[cat.posX][cat.posY].x,
+//                map[cat.posX][cat.posY].y);
 
     }
 

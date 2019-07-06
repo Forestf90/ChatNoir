@@ -37,8 +37,10 @@ public class ChatNoir extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT |
 				(Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
 
+		grid.draw(sr);
 		batch.begin();
-		grid.draw(sr, batch, cat);
+		batch.draw(cat.getTexture(), grid.map[cat.posX][cat.posY].x -grid.WIDTH/2,
+				grid.map[cat.posX][cat.posY].y - grid.HEIGHT/2, grid.WIDTH, grid.HEIGHT);
 		batch.end();
 	}
 
@@ -53,6 +55,8 @@ public class ChatNoir extends ApplicationAdapter {
 
 	@Override
 	public void dispose () {
+		cat.getTexture().dispose();
+		sr.dispose();
 		batch.dispose();
 	}
 }
