@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 
 public class ChatNoir extends ApplicationAdapter {
 	SpriteBatch batch;
@@ -51,6 +52,18 @@ public class ChatNoir extends ApplicationAdapter {
 
 	private void handleInput(){
 
+		if(Gdx.input.isTouched()){
+			 Vector2 touch = new Vector2(Gdx.input.getX(), Gdx.input.getY());
+
+			 for(int i=0 ; i <grid.map.length; i++){
+			 	for(int j=0; j<grid.map[i].length; j++){
+
+			 		if(grid.map[i][j].contains(touch)){
+			 			grid.map[i][j].open = false;
+					}
+				}
+			 }
+		}
 	}
 
 	@Override
