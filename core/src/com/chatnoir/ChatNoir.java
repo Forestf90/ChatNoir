@@ -12,17 +12,35 @@ public class ChatNoir extends ApplicationAdapter {
 	
 	@Override
 	public void create () {
+		loadData();
+		init();
+	}
+	private void init(){
 		batch = new SpriteBatch();
+	}
+
+	private void loadData(){
+
 	}
 
 	@Override
 	public void render () {
-		Gdx.gl.glClearColor(1, 0, 0, 1);
+		update();
+		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
 		batch.end();
 	}
-	
+
+	private void update(){
+		handleInput();
+
+	}
+
+	private void handleInput(){
+
+	}
+
 	@Override
 	public void dispose () {
 		batch.dispose();
