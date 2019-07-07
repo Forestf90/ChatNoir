@@ -19,9 +19,12 @@ public class Grid {
     int PADDING_H = 35;
     int BORDER =20;
 
+    private static final int SIZE_W =11;
+    private static final int SIZE_H =11;
+
 
     public Grid(){
-        this.map = new Sector[13][13];
+        this.map = new Sector[SIZE_W][SIZE_H];
         calculateBorder();
         init_map();
     }
@@ -40,9 +43,9 @@ public class Grid {
         Random r= new Random();
         int x=0 ,y=0;
         for(int i=0 ;i<BLOCKS;i++) {
-            x= r.nextInt(11);
-            y=r.nextInt(11);
-            if((x==6 && y==6) || !map[y][x].open){
+            x = r.nextInt(SIZE_W);
+            y = r.nextInt(SIZE_H);
+            if((x==(SIZE_W-1)/2 && y==(SIZE_H-1)/2) || !map[y][x].open){
                 i--;
                 continue;
             }
@@ -55,12 +58,12 @@ public class Grid {
         int wid = Gdx.graphics.getWidth();
         int hei = Gdx.graphics.getHeight();
 
-        WIDTH = wid/15;
-        HEIGHT = wid/15;
-        PADDING_H = wid/15;
-        PADDING_W = wid/15;
+        WIDTH = wid/(SIZE_W+2);
+        HEIGHT = wid/(SIZE_W+2);
+        PADDING_H = wid/(SIZE_W+2);
+        PADDING_W = wid/(SIZE_W+2);
 
-        RADIUS = (wid/15)/2;
+        RADIUS = (wid/(SIZE_W+2)/2);
 
         BORDER = (hei- wid)/2;
 

@@ -7,8 +7,8 @@ public class Cat {
 
     Texture texture;
 
-    int posX = 6;
-    int posY = 6;
+    int posX = 5;
+    int posY = 5;
 
     public Cat(Texture t){
 
@@ -19,5 +19,14 @@ public class Cat {
         return texture;
     }
 
+    public void findPath(Sector[][] grid){
+
+        dijkstra();
+    }
+
+    private void dijkstra(){
+
+
+    }
 
 }
