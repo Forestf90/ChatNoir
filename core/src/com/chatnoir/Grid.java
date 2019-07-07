@@ -19,6 +19,7 @@ public class Grid {
     int PADDING_W = 35;
     int PADDING_H = 35;
     int BORDER =20;
+    int iteration =0;
 
     private static final int SIZE_W =11;
     private static final int SIZE_H =11;
@@ -89,15 +90,33 @@ public class Grid {
     }
 
     public void drawAnimation(ShapeRenderer sr, ArrayList<Node> open, ArrayList<Node> visited){
+        if(visited.isEmpty()) return;
 
         sr.begin(ShapeRenderer.ShapeType.Filled);
+//        sr.setColor(Color.valueOf("FFA07A")); "8B0000
+//        for(Node n: open){
+//            sr.circle(map[n.x][n.y].x, map[n.x][n.y].y, map[n.x][n.y].radius);
+//        }
         sr.setColor(Color.valueOf("FFA07A"));
-        for(Node n: open){
+//        for(Node n: visited){
+//            sr.circle(map[n.x][n.y].x, map[n.x][n.y].y, map[n.x][n.y].radius);
+//        }
+
+        for(int i =0 ;i<iteration; i++){
+            Node n =visited.get(i);
             sr.circle(map[n.x][n.y].x, map[n.x][n.y].y, map[n.x][n.y].radius);
         }
-        sr.setColor(Color.valueOf("8B0000"));
-        for(Node n: visited){
-            sr.circle(map[n.x][n.y].x, map[n.x][n.y].y, map[n.x][n.y].radius);
+        try
+        {
+            Thread.sleep(100);
+        }
+        catch(InterruptedException ex)
+        {
+            Thread.currentThread().interrupt();
+        }
+        iteration++;
+        if(iteration>=visited.size()){
+            iteration =1;
         }
         sr.end();
     }

@@ -15,6 +15,8 @@ public class ChatNoir extends ApplicationAdapter {
 	Grid grid;
 	Cat cat;
 	boolean drawAnimation =true;
+	boolean drawAnimationAlgoritm =false;
+	boolean block = true;
 	@Override
 	public void create () {
 		loadData();
@@ -34,8 +36,11 @@ public class ChatNoir extends ApplicationAdapter {
 	@Override
 	public void render () {
 		update();
+		draw();
+	}
+
+	public void draw(){
 		Gdx.gl.glClearColor(1, 1,1,  1);
-		//Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT |
 				(Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
 
@@ -46,14 +51,13 @@ public class ChatNoir extends ApplicationAdapter {
 				grid.map[cat.posX][cat.posY].y - grid.HEIGHT/2, grid.WIDTH, grid.HEIGHT);
 		batch.end();
 	}
-
 	private void update(){
 		handleInput();
 
 	}
 
 	private void handleInput(){
-
+		if(!block) return;
 		if(Gdx.input.isTouched()){
 			 //Vector2 touch = new Vector2(Gdx.input.getX(), Gdx.input.getY()-1-Gdx.input.getY());
 			 int x= Gdx.input.getX();
@@ -68,6 +72,8 @@ public class ChatNoir extends ApplicationAdapter {
 						}
 			 			grid.map[i][j].open = false;
 			 			cat.findPath(grid.map);
+						//drawAnimationAlgoritm = true;
+						block = false;
 					}
 				}
 			 }

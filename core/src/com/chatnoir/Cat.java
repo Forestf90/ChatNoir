@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class Cat {
 
@@ -109,6 +110,7 @@ public class Cat {
 
             if (aktualny.x == 0 || aktualny.x == grid.length - 1 || aktualny.y == 0 || aktualny.y == grid.length - 1) {
                 Node temp2 = aktualny;
+                visited.add(temp2);
                 trasa.add(temp2);
                 while (true) {
                     if (temp2.parent == null) break;
@@ -124,7 +126,7 @@ public class Cat {
 
 
             }
-            Gdx.graphics.requestRendering();
+
         }
     }
 }
