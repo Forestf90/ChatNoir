@@ -67,6 +67,7 @@ public class ChatNoir extends ApplicationAdapter {
 			 				return;
 						}
 			 			grid.map[i][j].open = false;
+			 			cat.findPath(grid.map);
 					}
 				}
 			 }
