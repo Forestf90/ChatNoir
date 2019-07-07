@@ -42,7 +42,7 @@ public class Grid {
         for(int i=0 ;i<BLOCKS;i++) {
             x= r.nextInt(11);
             y=r.nextInt(11);
-            if((x==7 && y==7) || !map[y][x].open){
+            if((x==6 && y==6) || !map[y][x].open){
                 i--;
                 continue;
             }
