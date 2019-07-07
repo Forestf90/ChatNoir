@@ -58,6 +58,13 @@ public class ChatNoir extends ApplicationAdapter {
 			//zrobic to tylko za pomocą block
 		}
 
+		if(cat.runAway(grid.map)){
+			// funkcja reset
+			grid = new Grid();
+			cat.posX =5;
+			cat.posY =5;
+		}
+
 	}
 
 	private void handleInput(){

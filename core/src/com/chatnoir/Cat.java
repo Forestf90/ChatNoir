@@ -40,6 +40,13 @@ public class Cat {
         path.clear();
     }
 
+    public boolean runAway(Sector[][] grid){
+
+        if(posX ==0 || posX==grid.length) return true;
+        else if(posY == 0 || posY== grid[0].length) return true;
+        else return false;
+    }
+
     public void findPath(Sector[][] grid) {
 
         Node[][] map = createGrid(grid);
