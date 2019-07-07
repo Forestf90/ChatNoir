@@ -30,6 +30,16 @@ public class Cat {
         return texture;
     }
 
+    public void makeMove(){
+        Node temp = path.get(path.size() -2);
+        posX =temp.x;
+        posY =temp.y;
+
+        open.clear();
+        visited.clear();
+        path.clear();
+    }
+
     public void findPath(Sector[][] grid) {
 
         Node[][] map = createGrid(grid);

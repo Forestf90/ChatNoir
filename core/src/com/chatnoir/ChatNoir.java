@@ -15,7 +15,7 @@ public class ChatNoir extends ApplicationAdapter {
 	Grid grid;
 	Cat cat;
 	boolean drawAnimation =true;
-	boolean drawAnimationAlgoritm =false;
+	boolean moveCat =false;
 	boolean block = true;
 	@Override
 	public void create () {
@@ -36,23 +36,27 @@ public class ChatNoir extends ApplicationAdapter {
 	@Override
 	public void render () {
 		update();
-		draw();
-	}
-
-	public void draw(){
 		Gdx.gl.glClearColor(1, 1,1,  1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT |
 				(Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
 
 		grid.draw(sr);
-		if(drawAnimation) grid.drawAnimation(sr, cat.open, cat.visited);
+		if(drawAnimation){ grid.drawAnimation(sr, cat.open, cat.visited);
+		}
 		batch.begin();
 		batch.draw(cat.getTexture(), grid.map[cat.posX][cat.posY].x -grid.WIDTH/2,
 				grid.map[cat.posX][cat.posY].y - grid.HEIGHT/2, grid.WIDTH, grid.HEIGHT);
 		batch.end();
 	}
+
 	private void update(){
 		handleInput();
+		if(!grid.animation && moveCat){
+			cat.makeMove();
+			block =true;
+			moveCat=false;
+			//zrobic to tylko za pomocą block
+		}
 
 	}
 
@@ -71,9 +75,13 @@ public class ChatNoir extends ApplicationAdapter {
 			 				return;
 						}
 			 			grid.map[i][j].open = false;
-			 			cat.findPath(grid.map);
-						//drawAnimationAlgoritm = true;
-						block = false;
+						cat.findPath(grid.map);
+						if(drawAnimation){
+							grid.animation = true;
+							block = false;
+							moveCat =true;
+						}else cat.makeMove();
+
 					}
 				}
 			 }

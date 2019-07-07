@@ -20,6 +20,7 @@ public class Grid {
     int PADDING_H = 35;
     int BORDER =20;
     int iteration =0;
+    boolean animation= false;
 
     private static final int SIZE_W =11;
     private static final int SIZE_H =11;
@@ -74,6 +75,12 @@ public class Grid {
     public void draw(ShapeRenderer sr){
 
         sr.begin(ShapeRenderer.ShapeType.Filled);
+        sr.rect(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),
+                Color.valueOf("a1c4fd"),
+                Color.valueOf("a1c4fd"),
+                Color.valueOf("c2e9fb"),
+                Color.valueOf("c2e9fb"));
+
         for(int i=0; i<map.length; i++){
             for(int j=0; j<map[i].length; j++){
                 if(map[i][j].open){
@@ -89,8 +96,9 @@ public class Grid {
 
     }
 
-    public void drawAnimation(ShapeRenderer sr, ArrayList<Node> open, ArrayList<Node> visited){
-        if(visited.isEmpty()) return;
+    public void drawAnimation(ShapeRenderer sr, ArrayList<Node> open,
+                              ArrayList<Node> visited){
+        if(!animation) return;
 
         sr.begin(ShapeRenderer.ShapeType.Filled);
 //        sr.setColor(Color.valueOf("FFA07A")); "8B0000
@@ -115,10 +123,13 @@ public class Grid {
             Thread.currentThread().interrupt();
         }
         iteration++;
+
+        sr.end();
         if(iteration>=visited.size()){
             iteration =1;
+            animation = false;
+             return;
         }
-        sr.end();
     }
 
 
