@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Grid {
@@ -71,8 +72,6 @@ public class Grid {
 
     public void draw(ShapeRenderer sr){
 
-
-
         sr.begin(ShapeRenderer.ShapeType.Filled);
         for(int i=0; i<map.length; i++){
             for(int j=0; j<map[i].length; j++){
@@ -86,9 +85,21 @@ public class Grid {
             }
         }
         sr.end();
-//        batch.draw(cat.getTexture(), map[cat.posX][cat.posY].x,
-//                map[cat.posX][cat.posY].y);
 
+    }
+
+    public void drawAnimation(ShapeRenderer sr, ArrayList<Node> open, ArrayList<Node> visited){
+
+        sr.begin(ShapeRenderer.ShapeType.Filled);
+        sr.setColor(Color.valueOf("FFA07A"));
+        for(Node n: open){
+            sr.circle(map[n.x][n.y].x, map[n.x][n.y].y, map[n.x][n.y].radius);
+        }
+        sr.setColor(Color.valueOf("8B0000"));
+        for(Node n: visited){
+            sr.circle(map[n.x][n.y].x, map[n.x][n.y].y, map[n.x][n.y].radius);
+        }
+        sr.end();
     }
 
 

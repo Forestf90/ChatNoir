@@ -14,6 +14,7 @@ public class ChatNoir extends ApplicationAdapter {
 	ShapeRenderer sr;
 	Grid grid;
 	Cat cat;
+	boolean drawAnimation =true;
 	@Override
 	public void create () {
 		loadData();
@@ -39,6 +40,7 @@ public class ChatNoir extends ApplicationAdapter {
 				(Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
 
 		grid.draw(sr);
+		if(drawAnimation) grid.drawAnimation(sr, cat.open, cat.visited);
 		batch.begin();
 		batch.draw(cat.getTexture(), grid.map[cat.posX][cat.posY].x -grid.WIDTH/2,
 				grid.map[cat.posX][cat.posY].y - grid.HEIGHT/2, grid.WIDTH, grid.HEIGHT);
