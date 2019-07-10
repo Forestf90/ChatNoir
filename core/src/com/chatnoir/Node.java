@@ -2,6 +2,9 @@ package com.chatnoir;
 
 public class Node {
 
-    short x;
-    short y;
+    int x;
+    int y;
+    boolean open;
+    int weight =1;
+    Node parent;
 }

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Grid {
@@ -18,10 +19,15 @@ public class Grid {
     int PADDING_W = 35;
     int PADDING_H = 35;
     int BORDER =20;
+    int iteration =0;
+    boolean animation= false;
+
+    private static final int SIZE_W =11;
+    private static final int SIZE_H =11;
 
 
     public Grid(){
-        this.map = new Sector[13][13];
+        this.map = new Sector[SIZE_W][SIZE_H];
         calculateBorder();
         init_map();
     }
@@ -40,9 +46,9 @@ public class Grid {
         Random r= new Random();
         int x=0 ,y=0;
         for(int i=0 ;i<BLOCKS;i++) {
-            x= r.nextInt(11);
-            y=r.nextInt(11);
-            if((x==6 && y==6) || !map[y][x].open){
+            x = r.nextInt(SIZE_W);
+            y = r.nextInt(SIZE_H);
+            if((x==(SIZE_W-1)/2 && y==(SIZE_H-1)/2) || !map[y][x].open){
                 i--;
                 continue;
             }
@@ -55,12 +61,12 @@ public class Grid {
         int wid = Gdx.graphics.getWidth();
         int hei = Gdx.graphics.getHeight();
 
-        WIDTH = wid/15;
-        HEIGHT = wid/15;
-        PADDING_H = wid/15;
-        PADDING_W = wid/15;
+        WIDTH = wid/(SIZE_W+2);
+        HEIGHT = wid/(SIZE_W+2);
+        PADDING_H = wid/(SIZE_W+2);
+        PADDING_W = wid/(SIZE_W+2);
 
-        RADIUS = (wid/15)/2;
+        RADIUS = (wid/(SIZE_W+2)/2);
 
         BORDER = (hei- wid)/2;
 
@@ -68,9 +74,13 @@ public class Grid {
 
     public void draw(ShapeRenderer sr){
 
-
-
         sr.begin(ShapeRenderer.ShapeType.Filled);
+        sr.rect(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),
+                Color.valueOf("a1c4fd"),
+                Color.valueOf("a1c4fd"),
+                Color.valueOf("c2e9fb"),
+                Color.valueOf("c2e9fb"));
+
         for(int i=0; i<map.length; i++){
             for(int j=0; j<map[i].length; j++){
                 if(map[i][j].open){
@@ -83,9 +93,43 @@ public class Grid {
             }
         }
         sr.end();
-//        batch.draw(cat.getTexture(), map[cat.posX][cat.posY].x,
-//                map[cat.posX][cat.posY].y);
 
+    }
+
+    public void drawAnimation(ShapeRenderer sr, ArrayList<Node> open,
+                              ArrayList<Node> visited){
+        if(!animation) return;
+
+        sr.begin(ShapeRenderer.ShapeType.Filled);
+//        sr.setColor(Color.valueOf("FFA07A")); "8B0000
+//        for(Node n: open){
+//            sr.circle(map[n.x][n.y].x, map[n.x][n.y].y, map[n.x][n.y].radius);
+//        }
+        sr.setColor(Color.valueOf("FFA07A"));
+//        for(Node n: visited){
+//            sr.circle(map[n.x][n.y].x, map[n.x][n.y].y, map[n.x][n.y].radius);
+//        }
+
+        for(int i =0 ;i<iteration; i++){
+            Node n =visited.get(i);
+            sr.circle(map[n.x][n.y].x, map[n.x][n.y].y, map[n.x][n.y].radius);
+        }
+        try
+        {
+            Thread.sleep(100);
+        }
+        catch(InterruptedException ex)
+        {
+            Thread.currentThread().interrupt();
+        }
+        iteration++;
+
+        sr.end();
+        if(iteration>=visited.size()){
+            iteration =1;
+            animation = false;
+             return;
+        }
     }
 
 

@@ -14,6 +14,9 @@ public class ChatNoir extends ApplicationAdapter {
 	ShapeRenderer sr;
 	Grid grid;
 	Cat cat;
+	boolean drawAnimation =true;
+	boolean moveCat =false;
+	boolean block = true;
 	@Override
 	public void create () {
 		loadData();
@@ -34,11 +37,12 @@ public class ChatNoir extends ApplicationAdapter {
 	public void render () {
 		update();
 		Gdx.gl.glClearColor(1, 1,1,  1);
-		//Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT |
 				(Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
 
 		grid.draw(sr);
+		if(drawAnimation){ grid.drawAnimation(sr, cat.open, cat.visited);
+		}
 		batch.begin();
 		batch.draw(cat.getTexture(), grid.map[cat.posX][cat.posY].x -grid.WIDTH/2,
 				grid.map[cat.posX][cat.posY].y - grid.HEIGHT/2, grid.WIDTH, grid.HEIGHT);
@@ -47,11 +51,24 @@ public class ChatNoir extends ApplicationAdapter {
 
 	private void update(){
 		handleInput();
+		if(!grid.animation && moveCat){
+			cat.makeMove();
+			block =true;
+			moveCat=false;
+			//zrobic to tylko za pomocą block
+		}
+
+		if(cat.runAway(grid.map)){
+			// funkcja reset
+			grid = new Grid();
+			cat.posX =5;
+			cat.posY =5;
+		}
 
 	}
 
 	private void handleInput(){
-
+		if(!block) return;
 		if(Gdx.input.isTouched()){
 			 //Vector2 touch = new Vector2(Gdx.input.getX(), Gdx.input.getY()-1-Gdx.input.getY());
 			 int x= Gdx.input.getX();
@@ -65,6 +82,13 @@ public class ChatNoir extends ApplicationAdapter {
 			 				return;
 						}
 			 			grid.map[i][j].open = false;
+						cat.findPath(grid.map);
+						if(drawAnimation){
+							grid.animation = true;
+							block = false;
+							moveCat =true;
+						}else cat.makeMove();
+
 					}
 				}
 			 }
