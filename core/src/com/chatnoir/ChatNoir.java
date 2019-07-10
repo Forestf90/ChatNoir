@@ -8,6 +8,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class ChatNoir extends ApplicationAdapter {
 	SpriteBatch batch;
@@ -17,6 +24,10 @@ public class ChatNoir extends ApplicationAdapter {
 	boolean drawAnimation =true;
 	boolean moveCat =false;
 	boolean block = true;
+	private Stage stage;
+
+	TextButton animButton;
+	Skin animSkin;
 	@Override
 	public void create () {
 		loadData();
@@ -27,10 +38,30 @@ public class ChatNoir extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		sr = new ShapeRenderer();
 		grid = new Grid();
+
+		stage = new Stage(new ScreenViewport());
+		Gdx.input.setInputProcessor(stage);
+
+		animButton = new TextButton("Animations", animSkin);
+        animButton.setSize(100,50);
+        animButton.setPosition(Gdx.graphics.getWidth()-120,50);
+        animButton.addListener(new InputListener(){
+//            @Override
+//            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+//				drawAnimation ^= true;
+//            }
+			@Override
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				drawAnimation ^= true;
+				return true;
+			}
+        });
+        stage.addActor(animButton);
 	}
 
 	private void loadData(){
 		cat= new Cat(new Texture("cat.png"));
+        animSkin =new Skin(Gdx.files.internal("skin/uiskin.json"));
 	}
 
 	@Override
@@ -47,6 +78,9 @@ public class ChatNoir extends ApplicationAdapter {
 		batch.draw(cat.getTexture(), grid.map[cat.posX][cat.posY].x -grid.WIDTH/2,
 				grid.map[cat.posX][cat.posY].y - grid.HEIGHT/2, grid.WIDTH, grid.HEIGHT);
 		batch.end();
+
+		stage.act();
+		stage.draw();
 	}
 
 	private void update(){
