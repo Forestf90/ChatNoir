@@ -113,7 +113,7 @@ public class ChatNoir extends ApplicationAdapter {
 	private void update(){
 		handleInput();
 		if(!grid.animation && moveCat){
-			cat.makeMove();
+			moveCat();
 			block =true;
 			moveCat=false;
 			//zrobic to tylko za pomocą block
@@ -146,20 +146,34 @@ public class ChatNoir extends ApplicationAdapter {
 							grid.animation = true;
 							block = false;
 							moveCat =true;
-						}else cat.makeMove();
+						}else moveCat();
 
 					}
 				}
 			 }
 		}
 	}
+
+	private void moveCat(){
+		if(cat.path==null){
+			gameWin();
+		}else cat.makeMove();
+	}
     private void resetGame(){
         grid = new Grid();
         cat.posX =5;
         cat.posY =5;
+        cat.open.clear();
+        cat.visited.clear();
+        cat.path =null;
         gameRun=true;
         statusLabel.setText("");
     }
+
+    private void gameWin(){
+		gameRun =false;
+		statusLabel.setText("Cat trapped ! Click restart");
+	}
 	@Override
 	public void dispose () {
 		cat.getTexture().dispose();
