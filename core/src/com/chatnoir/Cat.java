@@ -34,7 +34,8 @@ public class Cat {
         Node temp = path.get(path.size() -2);
         posX =temp.x;
         posY =temp.y;
-
+//        System.out.println("X:"+posX);
+//        System.out.println("Y:"+posY);
         open.clear();
         visited.clear();
         path.clear();
@@ -42,8 +43,8 @@ public class Cat {
 
     public boolean runAway(Sector[][] grid){
 
-        if(posX ==0 || posX==grid.length) return true;
-        else if(posY == 0 || posY== grid[0].length) return true;
+        if(posX ==0 || posX==grid.length-1) return true;
+        else if(posY == 0 || posY== grid[0].length-1) return true;
         else return false;
     }
 

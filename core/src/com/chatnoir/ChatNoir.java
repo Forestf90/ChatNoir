@@ -12,8 +12,10 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class ChatNoir extends ApplicationAdapter {
@@ -21,12 +23,15 @@ public class ChatNoir extends ApplicationAdapter {
 	ShapeRenderer sr;
 	Grid grid;
 	Cat cat;
-	boolean drawAnimation =true;
+	boolean drawAnimation =false;
 	boolean moveCat =false;
 	boolean block = true;
+	boolean gameRun = true;
 	private Stage stage;
 
 	TextButton animButton;
+	TextButton restartButton;
+    Label statusLabel;
 	Skin animSkin;
 	@Override
 	public void create () {
@@ -42,7 +47,7 @@ public class ChatNoir extends ApplicationAdapter {
 		stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(stage);
 
-		animButton = new TextButton("Animations", animSkin);
+		animButton = new TextButton("Animations", animSkin, "toggle");
         animButton.setSize(100,50);
         animButton.setPosition(Gdx.graphics.getWidth()-120,50);
         animButton.addListener(new InputListener(){
@@ -52,11 +57,33 @@ public class ChatNoir extends ApplicationAdapter {
 //            }
 			@Override
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+			    if(moveCat) return true;
 				drawAnimation ^= true;
 				return true;
 			}
         });
+
+		restartButton = new TextButton("Restart", animSkin);
+		restartButton.setSize(100,50);
+		restartButton.setPosition(20,50);
+		restartButton.addListener(new InputListener(){
+			@Override
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				if(moveCat) return true;
+				resetGame();
+				return true;
+			}
+		});
+
+		statusLabel = new Label("",animSkin);
+		statusLabel.setSize(Gdx.graphics.getWidth(),50);
+		statusLabel.setPosition(0,100);
+		statusLabel.setAlignment(Align.center);
+
+
         stage.addActor(animButton);
+        stage.addActor(statusLabel);
+        stage.addActor(restartButton);
 	}
 
 	private void loadData(){
@@ -66,7 +93,7 @@ public class ChatNoir extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-		update();
+		if(gameRun)update();
 		Gdx.gl.glClearColor(1, 1,1,  1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT |
 				(Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
@@ -93,10 +120,8 @@ public class ChatNoir extends ApplicationAdapter {
 		}
 
 		if(cat.runAway(grid.map)){
-			// funkcja reset
-			grid = new Grid();
-			cat.posX =5;
-			cat.posY =5;
+			gameRun =false;
+			statusLabel.setText("Cat esceped ! Click restart");
 		}
 
 	}
@@ -128,7 +153,13 @@ public class ChatNoir extends ApplicationAdapter {
 			 }
 		}
 	}
-
+    private void resetGame(){
+        grid = new Grid();
+        cat.posX =5;
+        cat.posY =5;
+        gameRun=true;
+        statusLabel.setText("");
+    }
 	@Override
 	public void dispose () {
 		cat.getTexture().dispose();
