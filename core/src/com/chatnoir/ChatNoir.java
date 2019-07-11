@@ -48,8 +48,9 @@ public class ChatNoir extends ApplicationAdapter {
 		Gdx.input.setInputProcessor(stage);
 
 		animButton = new TextButton("Animations", animSkin, "toggle");
-        animButton.setSize(100,50);
-        animButton.setPosition(Gdx.graphics.getWidth()-120,50);
+        animButton.setSize(200,100);
+        animButton.setPosition(Gdx.graphics.getWidth()-220,50);
+        animButton.getLabel().setFontScale(1.5f);
         animButton.addListener(new InputListener(){
 //            @Override
 //            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
@@ -64,8 +65,9 @@ public class ChatNoir extends ApplicationAdapter {
         });
 
 		restartButton = new TextButton("Restart", animSkin);
-		restartButton.setSize(100,50);
+		restartButton.setSize(200,100);
 		restartButton.setPosition(20,50);
+		restartButton.getLabel().setFontScale(1.5f);
 		restartButton.addListener(new InputListener(){
 			@Override
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -76,9 +78,10 @@ public class ChatNoir extends ApplicationAdapter {
 		});
 
 		statusLabel = new Label("",animSkin);
-		statusLabel.setSize(Gdx.graphics.getWidth(),50);
-		statusLabel.setPosition(0,100);
+		statusLabel.setSize(Gdx.graphics.getWidth(),100);
+		statusLabel.setPosition(0,220);
 		statusLabel.setAlignment(Align.center);
+		statusLabel.setFontScale(2.0f);
 
 
         stage.addActor(animButton);
