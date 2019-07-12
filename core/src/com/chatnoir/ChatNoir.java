@@ -47,9 +47,11 @@ public class ChatNoir extends ApplicationAdapter {
 		stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(stage);
 
+		int buttonWidth = (Gdx.graphics.getWidth()*2) /7;
+
 		animButton = new TextButton("Animations", animSkin, "toggle");
-        animButton.setSize(200,100);
-        animButton.setPosition(Gdx.graphics.getWidth()-220,50);
+        animButton.setSize(buttonWidth,100);
+        animButton.setPosition(Gdx.graphics.getWidth()-buttonWidth-20,50);
         animButton.getLabel().setFontScale(1.5f);
         animButton.addListener(new InputListener(){
 //            @Override
@@ -65,7 +67,7 @@ public class ChatNoir extends ApplicationAdapter {
         });
 
 		restartButton = new TextButton("Restart", animSkin);
-		restartButton.setSize(200,100);
+		restartButton.setSize(buttonWidth,100);
 		restartButton.setPosition(20,50);
 		restartButton.getLabel().setFontScale(1.5f);
 		restartButton.addListener(new InputListener(){
