@@ -102,7 +102,7 @@ public class ChatNoir extends ApplicationAdapter {
 				(Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
 
 		grid.draw(sr);
-		if(drawAnimation){ grid.drawAnimation(sr, cat.open, cat.visited);
+		if(drawAnimation){ grid.drawAnimation(sr, cat.path, cat.visited);
 		}
 		batch.begin();
 		batch.draw(cat.getTexture(), grid.map[cat.posX][cat.posY].x -grid.WIDTH/2,
@@ -140,7 +140,7 @@ public class ChatNoir extends ApplicationAdapter {
 			 	for(int j=0; j<grid.map[i].length; j++){
 
 			 		if(grid.map[i][j].contains(x, y)){
-			 			if(!grid.map[i][j].open || cat.posY==i && cat.posY==j){
+			 			if(!grid.map[i][j].open || cat.posX==i && cat.posY==j){
 			 				return;
 						}
 			 			grid.map[i][j].open = false;

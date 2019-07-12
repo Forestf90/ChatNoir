@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 public class Grid {
@@ -20,6 +21,7 @@ public class Grid {
     int PADDING_H = 35;
     int BORDER =20;
     int iteration =0;
+    int iterationPath =0;
     boolean animation= false;
 
     private static final int SIZE_W =11;
@@ -96,19 +98,12 @@ public class Grid {
 
     }
 
-    public void drawAnimation(ShapeRenderer sr, ArrayList<Node> open,
+    public void drawAnimation(ShapeRenderer sr, ArrayList<Node> path,
                               ArrayList<Node> visited){
         if(!animation) return;
 
         sr.begin(ShapeRenderer.ShapeType.Filled);
-//        sr.setColor(Color.valueOf("FFA07A")); "8B0000
-//        for(Node n: open){
-//            sr.circle(map[n.x][n.y].x, map[n.x][n.y].y, map[n.x][n.y].radius);
-//        }
         sr.setColor(Color.valueOf("FFA07A"));
-//        for(Node n: visited){
-//            sr.circle(map[n.x][n.y].x, map[n.x][n.y].y, map[n.x][n.y].radius);
-//        }
 
         for(int i =0 ;i<iteration; i++){
             Node n =visited.get(i);
@@ -122,15 +117,41 @@ public class Grid {
         {
             Thread.currentThread().interrupt();
         }
-        iteration++;
+        if(iteration!=visited.size())iteration++;
 
-        sr.end();
-        if(iteration>=visited.size()){
-            iteration =1;
-            animation = false;
-             return;
+        if(iteration==visited.size()){
+            if(path==null){
+                resetAnimatin();
+                sr.end();
+                return;
+            }
+            if(iterationPath>path.size()){
+                resetAnimatin();
+                sr.end();
+                return;
+            }
+            sr.setColor(Color.valueOf("cc0000"));
+            for(int i =0 ;i<iterationPath; i++){
+                Node n =path.get(path.size()-i-1);
+                sr.circle(map[n.x][n.y].x, map[n.x][n.y].y, map[n.x][n.y].radius);
+            }
+            try
+            {
+                Thread.sleep(100);
+            }
+            catch(InterruptedException ex)
+            {
+                Thread.currentThread().interrupt();
+            }
+            iterationPath++;
+
         }
+        sr.end();
     }
 
-
+    private void resetAnimatin(){
+        iteration =1;
+        iterationPath=1;
+        animation = false;
+    }
 }
