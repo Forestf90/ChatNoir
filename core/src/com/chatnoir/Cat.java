@@ -34,7 +34,9 @@ public class Cat {
         Node temp = path.get(path.size() -2);
         posX =temp.x;
         posY =temp.y;
-
+        System.out.println("Path: "+path.size());
+        System.out.println("X:"+posX);
+        System.out.println("Y:"+posY);
         open.clear();
         visited.clear();
         path.clear();
@@ -42,8 +44,8 @@ public class Cat {
 
     public boolean runAway(Sector[][] grid){
 
-        if(posX ==0 || posX==grid.length) return true;
-        else if(posY == 0 || posY== grid[0].length) return true;
+        if(posX ==0 || posX==grid.length-1) return true;
+        else if(posY == 0 || posY== grid[0].length-1) return true;
         else return false;
     }
 
@@ -83,11 +85,11 @@ public class Cat {
             visited.add(aktualny);
 
 
-            if (aktualny.x % 2 == 0) iksy = temp1_iksy;
+            if (aktualny.y % 2 == 0) iksy = temp1_iksy;
             else iksy = temp2_iksy;
             for (int k = 0; k < iksy.length; k++) {
-                int j = iksy[k];
-                int i = igreki[k];
+                int j = igreki[k];
+                int i = iksy[k];
 
                 if (aktualny.x + i < grid.length && aktualny.y + j < grid.length &&
                         aktualny.x + i > -1 && aktualny.y + j > -1) {
@@ -106,6 +108,15 @@ public class Cat {
                 }
             }
 
+            if (open.size() == 0) {
+                trasa = null;
+                //   open.removeAll(open);
+                //   visited.removeAll(visited);
+                iksy = null;
+                this.path = trasa;
+                return;
+            }
+            
             Node temp = open.get(0);
             for (Node n : open) {
 
@@ -116,14 +127,6 @@ public class Cat {
             aktualny = temp;
 
 
-            if (open.size() == 0) {
-                trasa = null;
-             //   open.removeAll(open);
-             //   visited.removeAll(visited);
-                iksy = null;
-                this.path = trasa;
-                return;
-            }
 
             if (aktualny.x == 0 || aktualny.x == grid.length - 1 || aktualny.y == 0 || aktualny.y == grid.length - 1) {
                 Node temp2 = aktualny;
