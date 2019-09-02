@@ -19,20 +19,20 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class ChatNoir extends ApplicationAdapter {
-	SpriteBatch batch;
-	ShapeRenderer sr;
-	Grid grid;
-	Cat cat;
-	boolean drawAnimation =false;
-	boolean moveCat =false;
-	boolean block = true;
-	boolean gameRun = true;
+	private SpriteBatch batch;
+	private ShapeRenderer sr;
+	private Grid grid;
+	private Cat cat;
+    private boolean drawAnimation =false;
+    private boolean moveCat =false;
+    private boolean block = true;
+    private boolean gameRun = true;
 	private Stage stage;
 
-	TextButton animButton;
-	TextButton restartButton;
-    Label statusLabel;
-	Skin animSkin;
+    private TextButton animButton;
+    private TextButton restartButton;
+    private Label statusLabel;
+    private Skin animSkin;
 	@Override
 	public void create () {
 		loadData();
@@ -94,7 +94,8 @@ public class ChatNoir extends ApplicationAdapter {
 
 	private void loadData(){
 		cat= new Cat(new Texture("cat.png"));
-        animSkin =new Skin(Gdx.files.internal("skin/uiskin.json"));
+        animSkin =new Skin(Gdx.files.internal("skin/lgdxs/lgdxs-ui.json"));
+        //"skin/default/uiskin.json"
 	}
 
 	@Override
