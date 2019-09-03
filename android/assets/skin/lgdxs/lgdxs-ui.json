@@ -1545,7 +1545,7 @@ com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
 }
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 	default: {
-		font: sub-title
+		font: font
 		fontColor: black
 		disabledFontColor: clear
 		up: button-c
@@ -1553,14 +1553,17 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		disabled: button-disabled-c
 	}
 	toggle: {
-		font: sub-title
+		font: title
 		fontColor: black
 		disabledFontColor: clear
-		up: button-c
-		down: button-c-p
-		checked: button-c-p
-		disabled: button-disabled-c
-	}
+//		up: button-c
+//		down: button-c-p
+//		checked: button-c-p
+//		disabled: button-disabled-c
+		up: button-oval-c3
+		down: button-oval-c3-p
+		checked:button-oval-c3-p
+	},
 	color2: {
 		font: font
 		fontColor: black
@@ -1688,9 +1691,9 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		down: button-oval-c2-p
 	}
 	oval3: {
-		font: sub-title
+		font: title
 		fontColor: black
-		disabledFontColor: clear
+		//disabledFontColor: clear
 		up: button-oval-c3
 		down: button-oval-c3-p
 	}
