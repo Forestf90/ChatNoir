@@ -1,4 +1,4 @@
-package com.chatnoir;
+package com.chatnoir.map;
 
 import com.badlogic.gdx.math.Circle;
 

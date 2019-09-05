@@ -1,28 +1,26 @@
-package com.chatnoir;
+package com.chatnoir.map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.chatnoir.ai.Node;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Random;
 
 public class Grid {
 
     public Sector[][] map;
 
-    int WIDTH =40;
-    int HEIGHT =40;
-    int RADIUS =20;
-    int PADDING_W = 35;
-    int PADDING_H = 35;
-    int BORDER =20;
-    int iteration =0;
-    int iterationPath =0;
-    boolean animation= false;
+    public int WIDTH =40;
+    public int HEIGHT =40;
+    private int RADIUS =20;
+    private int PADDING_W = 35;
+    private int PADDING_H = 35;
+    private int BORDER =20;
+    private int iteration =0;
+    private int iterationPath =0;
+    public boolean animation= false;
 
     private static final int SIZE_W =11;
     private static final int SIZE_H =11;
@@ -121,12 +119,12 @@ public class Grid {
 
         if(iteration==visited.size()){
             if(path==null){
-                resetAnimatin();
+                resetAnimation();
                 sr.end();
                 return;
             }
             if(iterationPath>path.size()){
-                resetAnimatin();
+                resetAnimation();
                 sr.end();
                 return;
             }
@@ -149,7 +147,7 @@ public class Grid {
         sr.end();
     }
 
-    private void resetAnimatin(){
+    private void resetAnimation(){
         iteration =1;
         iterationPath=1;
         animation = false;

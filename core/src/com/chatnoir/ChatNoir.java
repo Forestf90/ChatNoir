@@ -11,17 +11,13 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.List;
-import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.chatnoir.ai.Cat;
+import com.chatnoir.map.Grid;
 
 public class ChatNoir extends ApplicationAdapter {
     private SpriteBatch batch;
@@ -58,15 +54,10 @@ public class ChatNoir extends ApplicationAdapter {
 
         int buttonWidth = (Gdx.graphics.getWidth() * 2) / 7;
         int buttonHeight = Gdx.graphics.getHeight() / 10;
-//        animSkin.remove("sub-title", BitmapFont.class);
-//        animSkin.remove("font", BitmapFont.class);
-//        animSkin.remove("title", BitmapFont.class);
-//        animSkin.add("sub-title", font, BitmapFont.class);
         animSkin.get(Label.LabelStyle.class).font = font;
-        animSkin.get(TextButton.TextButtonStyle.class).font =font;
+        animSkin.get(TextButton.TextButtonStyle.class).font = font;
 
 
-        //animSkin.get(Button.ButtonStyle.class).
         animButton = new TextButton("Animations", animSkin, "toggle");
         animButton.setLabel(new Label("Animations", animSkin));
         animButton.getLabel().setAlignment(Align.center);
@@ -87,7 +78,7 @@ public class ChatNoir extends ApplicationAdapter {
         restartButton.getLabel().setAlignment(Align.center);
         restartButton.setSize(buttonWidth, buttonHeight);
         restartButton.setPosition(20, 50);
-       // restartButton.getLabel().setFontScale(1.5f);
+        // restartButton.getLabel().setFontScale(1.5f);
         restartButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -99,13 +90,13 @@ public class ChatNoir extends ApplicationAdapter {
 
         statusLabel = new Label("", animSkin);
         statusLabel.setSize(Gdx.graphics.getWidth(), buttonHeight + 20);
-        statusLabel.setPosition(0, Gdx.graphics.getHeight() / 2);
+        statusLabel.setPosition(0, Gdx.graphics.getHeight() * 0.5f);
         statusLabel.setAlignment(Align.center);
         //statusLabel.setFontScale(2.0f);
 
         titleLabel = new Label("Chat Noir", animSkin);
         titleLabel.setWidth(Gdx.graphics.getWidth());
-        titleLabel.setPosition(0,Gdx.graphics.getHeight()*0.9f);
+        titleLabel.setPosition(0, Gdx.graphics.getHeight() * 0.9f);
         titleLabel.setAlignment(Align.center);
 
         stage.addActor(animButton);
@@ -134,11 +125,11 @@ public class ChatNoir extends ApplicationAdapter {
 
         grid.draw(sr);
         if (drawAnimation) {
-            grid.drawAnimation(sr, cat.path, cat.visited);
+            grid.drawAnimation(sr, cat.getPath(), cat.getVisited());
         }
         batch.begin();
-        batch.draw(cat.getTexture(), grid.map[cat.posX][cat.posY].x - grid.WIDTH / 2,
-                grid.map[cat.posX][cat.posY].y - grid.HEIGHT / 2, grid.WIDTH, grid.HEIGHT);
+        batch.draw(cat.getTexture(), grid.map[cat.getPosX()][cat.getPosY()].x - grid.WIDTH*0.5f,
+                grid.map[cat.getPosX()][cat.getPosY()].y - grid.HEIGHT *0.5f, grid.WIDTH, grid.HEIGHT);
         batch.end();
 
         stage.act();
@@ -172,7 +163,7 @@ public class ChatNoir extends ApplicationAdapter {
                 for (int j = 0; j < grid.map[i].length; j++) {
 
                     if (grid.map[i][j].contains(x, y)) {
-                        if (!grid.map[i][j].open || cat.posX == i && cat.posY == j) {
+                        if (!grid.map[i][j].open || cat.getPosX() == i && cat.getPosY() == j) {
                             return;
                         }
                         grid.map[i][j].open = false;
@@ -190,18 +181,18 @@ public class ChatNoir extends ApplicationAdapter {
     }
 
     private void moveCat() {
-        if (cat.path == null) {
+        if (cat.getPath() == null) {
             gameWin();
         } else cat.makeMove();
     }
 
     private void resetGame() {
         grid = new Grid();
-        cat.posX = 5;
-        cat.posY = 5;
-        cat.open.clear();
-        cat.visited.clear();
-        cat.path = null;
+        cat.setPosX(5);
+        cat.setPosY(5);
+        cat.getOpen().clear();
+        cat.getVisited().clear();
+//        cat.getPath().clear();// = null;
         gameRun = true;
         statusLabel.setText("");
     }

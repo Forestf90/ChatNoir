@@ -1,22 +1,49 @@
-package com.chatnoir;
+package com.chatnoir.ai;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.chatnoir.map.Sector;
 
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 public class Cat {
 
-    Texture texture;
+    private Texture texture;
 
-    int posX = 5;
-    int posY = 5;
 
-    ArrayList<Node> open;
-    ArrayList<Node> visited;
-    ArrayList<Node> path;
+    private int posX = 5;
+    private int posY = 5;
+
+    private ArrayList<Node> open;
+    private ArrayList<Node> visited;
+    private ArrayList<Node> path;
+
+    public ArrayList<Node> getOpen() {
+        return open;
+    }
+
+    public ArrayList<Node> getVisited() {
+        return visited;
+    }
+
+    public ArrayList<Node> getPath() {
+        return path;
+    }
+
+    public int getPosX() {
+        return posX;
+    }
+
+    public void setPosX(int posX) {
+        this.posX = posX;
+    }
+
+    public int getPosY() {
+        return posY;
+    }
+
+    public void setPosY(int posY) {
+        this.posY = posY;
+    }
 
     public Cat(Texture t) {
 
@@ -30,22 +57,22 @@ public class Cat {
         return texture;
     }
 
-    public void makeMove(){
-        Node temp = path.get(path.size() -2);
-        posX =temp.x;
-        posY =temp.y;
-        System.out.println("Path: "+path.size());
-        System.out.println("X:"+posX);
-        System.out.println("Y:"+posY);
+    public void makeMove() {
+        Node temp = path.get(path.size() - 2);
+        posX = temp.x;
+        posY = temp.y;
+        System.out.println("Path: " + path.size());
+        System.out.println("X:" + posX);
+        System.out.println("Y:" + posY);
         open.clear();
         visited.clear();
         path.clear();
     }
 
-    public boolean runAway(Sector[][] grid){
+    public boolean runAway(Sector[][] grid) {
 
-        if(posX ==0 || posX==grid.length-1) return true;
-        else if(posY == 0 || posY== grid[0].length-1) return true;
+        if (posX == 0 || posX == grid.length - 1) return true;
+        else if (posY == 0 || posY == grid[0].length - 1) return true;
         else return false;
     }
 
@@ -116,7 +143,7 @@ public class Cat {
                 this.path = trasa;
                 return;
             }
-            
+
             Node temp = open.get(0);
             for (Node n : open) {
 
@@ -125,7 +152,6 @@ public class Cat {
             }
             open.remove(temp);
             aktualny = temp;
-
 
 
             if (aktualny.x == 0 || aktualny.x == grid.length - 1 || aktualny.y == 0 || aktualny.y == grid.length - 1) {
@@ -138,8 +164,8 @@ public class Cat {
                     trasa.add(temp2);
 
                 }
-              //  open.removeAll(open);
-               // visited.removeAll(visited);
+                //  open.removeAll(open);
+                // visited.removeAll(visited);
                 iksy = null;
                 this.path = trasa;
                 return;

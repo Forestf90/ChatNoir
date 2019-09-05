@@ -7,8 +7,8 @@ import com.chatnoir.ChatNoir;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width =500;
-		config.height =700;
+		config.width =600;
+		config.height =900;
 		config.resizable = false;
 		config.samples = 3;
 		new LwjglApplication(new ChatNoir(), config);

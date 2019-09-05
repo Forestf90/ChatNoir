@@ -1,9 +1,9 @@
-package com.chatnoir;
+package com.chatnoir.ai;
 
 public class Node {
 
-    int x;
-    int y;
+    public int x;
+    public int y;
     boolean open;
     int weight =1;
     Node parent;
