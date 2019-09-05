@@ -88,8 +88,9 @@ public class Cat {
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
                 grid[i][j] = new Node();
-                if (!map[i][j].open) grid[i][j].open = false;
-                else grid[i][j].open = true;
+//                if (map[i][j].open) grid[i][j].open = true;
+//                else grid[i][j].open = false;
+                grid[i][j].open = map[i][j].open;
                 grid[i][j].x = i;
                 grid[i][j].y = j;
 
@@ -100,74 +101,67 @@ public class Cat {
     }
 
     private void dijkstra(Node[][] grid) {
-        Node aktualny = grid[posX][posY];
-        ArrayList<Node> trasa = new ArrayList<Node>();
+        Node currentNode = grid[posX][posY];
+        ArrayList<Node> route = new ArrayList<Node>();
 
-        int[] igreki = {0, -1, -1, 0, 1, 1};
-        int[] temp1_iksy = {-1, -1, 0, 1, -1, 0};
-        int[] temp2_iksy = {-1, 0, 1, 1, 0, 1};
-        int[] iksy;
+        int[] yDirection = {0, -1, -1, 0, 1, 1};
+        int[] xDirectionEven = {-1, -1, 0, 1, -1, 0};
+        int[] xDirectionNotEven = {-1, 0, 1, 1, 0, 1};
+        int[] xDirection;
 
         while (true) {
-            visited.add(aktualny);
+            visited.add(currentNode);
 
 
-            if (aktualny.y % 2 == 0) iksy = temp1_iksy;
-            else iksy = temp2_iksy;
-            for (int k = 0; k < iksy.length; k++) {
-                int j = igreki[k];
-                int i = iksy[k];
+            if (currentNode.y % 2 == 0) xDirection = xDirectionEven;
+            else xDirection = xDirectionNotEven;
+            for (int k = 0; k < xDirection.length; k++) {
+                int j = yDirection[k];
+                int i = xDirection[k];
 
-                if (aktualny.x + i < grid.length && aktualny.y + j < grid.length &&
-                        aktualny.x + i > -1 && aktualny.y + j > -1) {
-                    if (grid[aktualny.x + i][aktualny.y + j].open && !visited.contains(grid[aktualny.x + i][aktualny.y + j])) {
-                        if (open.contains(grid[aktualny.x + i][aktualny.y + j])) {
-                            if (grid[aktualny.x + i][aktualny.y + j].parent.weight > grid[aktualny.x][aktualny.y].weight + 10) {
-                                grid[aktualny.x + i][aktualny.y + j].parent = aktualny;
-                                grid[aktualny.x + i][aktualny.y + j].weight = aktualny.weight + 10;
+                if (currentNode.x + i < grid.length && currentNode.y + j < grid.length &&
+                        currentNode.x + i > -1 && currentNode.y + j > -1) {
+                    if (grid[currentNode.x + i][currentNode.y + j].open && !visited.contains(grid[currentNode.x + i][currentNode.y + j])) {
+                        if (open.contains(grid[currentNode.x + i][currentNode.y + j])) {
+                            if (grid[currentNode.x + i][currentNode.y + j].parent.weight > grid[currentNode.x][currentNode.y].weight + 10) {
+                                grid[currentNode.x + i][currentNode.y + j].parent = currentNode;
+                                grid[currentNode.x + i][currentNode.y + j].weight = currentNode.weight + 10;
                             }
                         } else {
-                            grid[aktualny.x + i][aktualny.y + j].parent = aktualny;
-                            open.add(grid[aktualny.x + i][aktualny.y + j]);
-                            grid[aktualny.x + i][aktualny.y + j].weight = aktualny.weight + 10;
+                            grid[currentNode.x + i][currentNode.y + j].parent = currentNode;
+                            open.add(grid[currentNode.x + i][currentNode.y + j]);
+                            grid[currentNode.x + i][currentNode.y + j].weight = currentNode.weight + 10;
                         }
                     }
                 }
             }
 
             if (open.size() == 0) {
-                trasa = null;
-                //   open.removeAll(open);
-                //   visited.removeAll(visited);
-                iksy = null;
-                this.path = trasa;
+                this.path = null;
                 return;
             }
 
-            Node temp = open.get(0);
+            Node nextNode = open.get(0);
             for (Node n : open) {
 
-                if (n.weight < temp.weight) temp = n;
+                if (n.weight < nextNode.weight) nextNode = n;
 
             }
-            open.remove(temp);
-            aktualny = temp;
+            open.remove(nextNode);
+            currentNode = nextNode;
 
 
-            if (aktualny.x == 0 || aktualny.x == grid.length - 1 || aktualny.y == 0 || aktualny.y == grid.length - 1) {
-                Node temp2 = aktualny;
-                visited.add(temp2);
-                trasa.add(temp2);
+            if (currentNode.x == 0 || currentNode.x == grid.length - 1 || currentNode.y == 0 || currentNode.y == grid.length - 1) {
+                Node lastPathNode = currentNode;
+                visited.add(lastPathNode);
+                route.add(lastPathNode);
                 while (true) {
-                    if (temp2.parent == null) break;
-                    temp2 = temp2.parent;
-                    trasa.add(temp2);
+                    if (lastPathNode.parent == null) break;
+                    lastPathNode = lastPathNode.parent;
+                    route.add(lastPathNode);
 
                 }
-                //  open.removeAll(open);
-                // visited.removeAll(visited);
-                iksy = null;
-                this.path = trasa;
+                this.path = route;
                 return;
 
 
