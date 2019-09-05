@@ -29,9 +29,11 @@ public class ChatNoir extends ApplicationAdapter {
     private boolean block = true;
     private boolean gameRun = true;
     private Stage stage;
+    private Algorithm algorithm;
 
     private TextButton animButton;
     private TextButton restartButton;
+    private TextButton algorithmButton;
     private Label statusLabel;
     private Label titleLabel;
     private Skin animSkin;
@@ -49,6 +51,8 @@ public class ChatNoir extends ApplicationAdapter {
         sr = new ShapeRenderer();
         grid = new Grid();
 
+        algorithm = Algorithm.Dijkstra;
+
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
@@ -57,13 +61,11 @@ public class ChatNoir extends ApplicationAdapter {
         animSkin.get(Label.LabelStyle.class).font = font;
         animSkin.get(TextButton.TextButtonStyle.class).font = font;
 
-
         animButton = new TextButton("Animations", animSkin, "toggle");
         animButton.setLabel(new Label("Animations", animSkin));
         animButton.getLabel().setAlignment(Align.center);
         animButton.setSize(buttonWidth, buttonHeight);
         animButton.setPosition(Gdx.graphics.getWidth() - buttonWidth - 20, 50);
-        //animButton.getLabel().setFontScale(1.5f);
         animButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -78,7 +80,6 @@ public class ChatNoir extends ApplicationAdapter {
         restartButton.getLabel().setAlignment(Align.center);
         restartButton.setSize(buttonWidth, buttonHeight);
         restartButton.setPosition(20, 50);
-        // restartButton.getLabel().setFontScale(1.5f);
         restartButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -88,11 +89,30 @@ public class ChatNoir extends ApplicationAdapter {
             }
         });
 
+        algorithmButton = new TextButton("Dijkstra", animSkin, "oval3");
+        algorithmButton.setLabel(new Label("Dijkstra", animSkin));
+        algorithmButton.getLabel().setAlignment(Align.center);
+        algorithmButton.setSize(buttonWidth, buttonHeight);
+        algorithmButton.setPosition(Gdx.graphics.getWidth() * 0.5f - buttonWidth * 0.5f, 50);
+        algorithmButton.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if (algorithm == Algorithm.Dijkstra) {
+                    algorithm = Algorithm.AStar;
+                } else if (algorithm == Algorithm.AStar) {
+                    algorithm = Algorithm.DFS;
+                } else if (algorithm == Algorithm.DFS) {
+                    algorithm = Algorithm.Dijkstra;
+                }
+                algorithmButton.getLabel().setText(algorithm.toString());
+                return true;
+            }
+        });
+
         statusLabel = new Label("", animSkin);
         statusLabel.setSize(Gdx.graphics.getWidth(), buttonHeight + 20);
         statusLabel.setPosition(0, Gdx.graphics.getHeight() * 0.5f);
         statusLabel.setAlignment(Align.center);
-        //statusLabel.setFontScale(2.0f);
 
         titleLabel = new Label("Chat Noir", animSkin);
         titleLabel.setWidth(Gdx.graphics.getWidth());
@@ -103,6 +123,7 @@ public class ChatNoir extends ApplicationAdapter {
         stage.addActor(statusLabel);
         stage.addActor(restartButton);
         stage.addActor(titleLabel);
+        stage.addActor(algorithmButton);
     }
 
     private void loadData() {
@@ -128,8 +149,8 @@ public class ChatNoir extends ApplicationAdapter {
             grid.drawAnimation(sr, cat.getPath(), cat.getVisited());
         }
         batch.begin();
-        batch.draw(cat.getTexture(), grid.map[cat.getPosX()][cat.getPosY()].x - grid.WIDTH*0.5f,
-                grid.map[cat.getPosX()][cat.getPosY()].y - grid.HEIGHT *0.5f, grid.WIDTH, grid.HEIGHT);
+        batch.draw(cat.getTexture(), grid.map[cat.getPosX()][cat.getPosY()].x - grid.WIDTH * 0.5f,
+                grid.map[cat.getPosX()][cat.getPosY()].y - grid.HEIGHT * 0.5f, grid.WIDTH, grid.HEIGHT);
         batch.end();
 
         stage.act();
