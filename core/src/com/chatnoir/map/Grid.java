@@ -147,7 +147,7 @@ public class Grid {
         sr.end();
     }
 
-    private void resetAnimation(){
+    public void resetAnimation(){
         iteration =1;
         iterationPath=1;
         animation = false;

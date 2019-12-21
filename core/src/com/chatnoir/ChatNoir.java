@@ -69,7 +69,10 @@ public class ChatNoir extends ApplicationAdapter {
         animButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if (moveCat) return true;
+                if (moveCat){
+                    grid.animation = false;
+                    grid.resetAnimation();
+                }
                 drawAnimation ^= true;
                 return true;
             }
