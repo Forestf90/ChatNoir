@@ -25,7 +25,6 @@ public class ChatNoir extends ApplicationAdapter {
     private Grid grid;
     private Cat cat;
     private boolean drawAnimation = false;
-    private boolean moveCat = false;
     private boolean block = true;
     private boolean gameRun = true;
     private Stage stage;
@@ -69,7 +68,7 @@ public class ChatNoir extends ApplicationAdapter {
         animButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if (moveCat){
+                if (!block){
                     grid.animation = false;
                     grid.resetAnimation();
                 }
@@ -86,7 +85,7 @@ public class ChatNoir extends ApplicationAdapter {
         restartButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if (moveCat) return true;
+                //if (!block) return true;
                 resetGame();
                 return true;
             }
@@ -162,10 +161,10 @@ public class ChatNoir extends ApplicationAdapter {
 
     private void update() {
         handleInput();
-        if (!grid.animation && moveCat) {
+        if (!grid.animation && !block) {
             moveCat();
             block = true;
-            moveCat = false;
+            //moveCat = false;
             //zrobic to tylko za pomocą block
         }
 
@@ -195,7 +194,7 @@ public class ChatNoir extends ApplicationAdapter {
                         if (drawAnimation) {
                             grid.animation = true;
                             block = false;
-                            moveCat = true;
+                            //moveCat = true;
                         } else moveCat();
 
                     }
@@ -216,7 +215,7 @@ public class ChatNoir extends ApplicationAdapter {
         cat.setPosY(5);
         cat.getOpen().clear();
         cat.getVisited().clear();
-//        cat.getPath().clear();// = null;
+        if(cat.getPath() != null)cat.getPath().clear();
         gameRun = true;
         statusLabel.setText("");
     }

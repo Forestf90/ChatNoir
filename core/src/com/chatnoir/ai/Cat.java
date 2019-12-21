@@ -58,6 +58,7 @@ public class Cat {
     }
 
     public void makeMove() {
+        if(path.isEmpty()) return;
         Node temp = path.get(path.size() - 2);
         posX = temp.x;
         posY = temp.y;
