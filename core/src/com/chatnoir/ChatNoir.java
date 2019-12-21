@@ -128,7 +128,7 @@ public class ChatNoir extends ApplicationAdapter {
 
     private void loadData() {
         cat = new Cat(new Texture("cat.png"));
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font/GreatVibes-Regular.ttf"));
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font/pacifico/Pacifico.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size =  (int)(Gdx.graphics.getHeight() * 0.04f);
         font = generator.generateFont(parameter);
