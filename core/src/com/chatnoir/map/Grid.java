@@ -39,7 +39,7 @@ public class Grid {
             for(int j=0; j<map[i].length; j++){
                 map[i][j] = new Sector();
                 map[i][j].x=i *WIDTH+(PADDING_W+(j%2*WIDTH/2)+WIDTH/2);
-                map[i][j].y = j* HEIGHT+PADDING_H+HEIGHT/2+BORDER;
+                map[i][j].y = j* HEIGHT+PADDING_H+HEIGHT/2+BORDER*1.5f;
                 map[i][j].radius =RADIUS;
             }
         }

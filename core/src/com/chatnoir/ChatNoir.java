@@ -32,6 +32,7 @@ public class ChatNoir extends ApplicationAdapter {
 
     private TextButton animButton;
     private TextButton restartButton;
+    private TextButton undoButton;
     private TextButton algorithmButton;
     private Label statusLabel;
     private Label titleLabel;
@@ -55,7 +56,7 @@ public class ChatNoir extends ApplicationAdapter {
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
-        int buttonWidth = (Gdx.graphics.getWidth() * 2) / 7;
+        int buttonWidth = (Gdx.graphics.getWidth() * 8) / 27;
         int buttonHeight = Gdx.graphics.getHeight() / 10;
         animSkin.get(Label.LabelStyle.class).font = font;
         animSkin.get(TextButton.TextButtonStyle.class).font = font;
@@ -63,8 +64,8 @@ public class ChatNoir extends ApplicationAdapter {
         animButton = new TextButton("Animations", animSkin, "toggle");
         animButton.setLabel(new Label("Animations", animSkin));
         animButton.getLabel().setAlignment(Align.center);
-        animButton.setSize(buttonWidth, buttonHeight);
-        animButton.setPosition(Gdx.graphics.getWidth() - buttonWidth - 20, 50);
+        animButton.setSize(buttonWidth*3+20, buttonHeight);
+        animButton.setPosition(20, 50);
         animButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -81,7 +82,7 @@ public class ChatNoir extends ApplicationAdapter {
         restartButton.setLabel(new Label("Restart", animSkin));
         restartButton.getLabel().setAlignment(Align.center);
         restartButton.setSize(buttonWidth, buttonHeight);
-        restartButton.setPosition(20, 50);
+        restartButton.setPosition(20, 70+buttonHeight);
         restartButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -95,7 +96,8 @@ public class ChatNoir extends ApplicationAdapter {
         algorithmButton.setLabel(new Label("Dijkstra", animSkin));
         algorithmButton.getLabel().setAlignment(Align.center);
         algorithmButton.setSize(buttonWidth, buttonHeight);
-        algorithmButton.setPosition(Gdx.graphics.getWidth() * 0.5f - buttonWidth * 0.5f, 50);
+        algorithmButton.setPosition(Gdx.graphics.getWidth() * 0.5f - buttonWidth * 0.5f,
+                70+buttonHeight);
         algorithmButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -111,6 +113,18 @@ public class ChatNoir extends ApplicationAdapter {
             }
         });
 
+        undoButton = new TextButton("Undo", animSkin, "oval3");
+        undoButton.setLabel(new Label("Undo", animSkin));
+        undoButton.getLabel().setAlignment(Align.center);
+        undoButton.setSize(buttonWidth, buttonHeight);
+        undoButton.setPosition(Gdx.graphics.getWidth() - buttonWidth - 20,
+                70+ buttonHeight);
+        undoButton.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
+        });
         statusLabel = new Label("", animSkin);
         statusLabel.setSize(Gdx.graphics.getWidth(), buttonHeight + 20);
         statusLabel.setPosition(0, Gdx.graphics.getHeight() * 0.5f);
@@ -124,6 +138,7 @@ public class ChatNoir extends ApplicationAdapter {
         stage.addActor(animButton);
         stage.addActor(statusLabel);
         stage.addActor(restartButton);
+        stage.addActor(undoButton);
         stage.addActor(titleLabel);
         stage.addActor(algorithmButton);
     }
