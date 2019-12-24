@@ -64,8 +64,8 @@ public class ChatNoir extends ApplicationAdapter {
         animButton = new TextButton("Animations", animSkin, "toggle");
         animButton.setLabel(new Label("Animations", animSkin));
         animButton.getLabel().setAlignment(Align.center);
-        animButton.setSize(buttonWidth*3+20, buttonHeight);
-        animButton.setPosition(20, 50);
+        animButton.setSize(buttonWidth*3, buttonHeight);
+        animButton.setPosition((Gdx.graphics.getWidth() -buttonWidth*3)/2, 50);
         animButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
