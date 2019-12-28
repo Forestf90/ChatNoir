@@ -1,6 +1,7 @@
 package com.chatnoir.ai;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.chatnoir.Algorithm;
 import com.chatnoir.map.Sector;
 
 import java.util.ArrayList;
@@ -12,6 +13,9 @@ public class Cat {
 
     private int posX = 5;
     private int posY = 5;
+
+    private int lastX = 5;
+    private int lastY = 5;
 
     private ArrayList<Node> open;
     private ArrayList<Node> visited;
@@ -58,8 +62,10 @@ public class Cat {
     }
 
     public void makeMove() {
-        if(path.isEmpty()) return;
+        if (path.isEmpty()) return;
         Node temp = path.get(path.size() - 2);
+        lastX = posX;
+        lastY = posY;
         posX = temp.x;
         posY = temp.y;
         System.out.println("Path: " + path.size());
@@ -70,6 +76,11 @@ public class Cat {
         path.clear();
     }
 
+    public void undoMove() {
+        posX = lastX;
+        posY = lastY;
+    }
+
     public boolean runAway(Sector[][] grid) {
 
         if (posX == 0 || posX == grid.length - 1) return true;
@@ -77,10 +88,11 @@ public class Cat {
         else return false;
     }
 
-    public void findPath(Sector[][] grid) {
+    public void findPath(Sector[][] grid, Algorithm algorithm) {
 
         Node[][] map = createGrid(grid);
-        dijkstra(map);
+        System.out.println(algorithm.toString());
+        bfs(map);
     }
 
     private Node[][] createGrid(Sector[][] map) {
@@ -101,7 +113,7 @@ public class Cat {
         return grid;
     }
 
-    private void dijkstra(Node[][] grid) {
+    private void bfs(Node[][] grid) {
         Node currentNode = grid[posX][posY];
         ArrayList<Node> route = new ArrayList<Node>();
 
@@ -124,14 +136,14 @@ public class Cat {
                         currentNode.x + i > -1 && currentNode.y + j > -1) {
                     if (grid[currentNode.x + i][currentNode.y + j].open && !visited.contains(grid[currentNode.x + i][currentNode.y + j])) {
                         if (open.contains(grid[currentNode.x + i][currentNode.y + j])) {
-                            if (grid[currentNode.x + i][currentNode.y + j].parent.weight > grid[currentNode.x][currentNode.y].weight + 10) {
-                                grid[currentNode.x + i][currentNode.y + j].parent = currentNode;
-                                grid[currentNode.x + i][currentNode.y + j].weight = currentNode.weight + 10;
-                            }
+//                            if (grid[currentNode.x + i][currentNode.y + j].parent.weight > grid[currentNode.x][currentNode.y].weight + 10) {
+//                                grid[currentNode.x + i][currentNode.y + j].parent = currentNode;
+//                                grid[currentNode.x + i][currentNode.y + j].weight = currentNode.weight + 10;
+//                            }
                         } else {
                             grid[currentNode.x + i][currentNode.y + j].parent = currentNode;
                             open.add(grid[currentNode.x + i][currentNode.y + j]);
-                            grid[currentNode.x + i][currentNode.y + j].weight = currentNode.weight + 10;
+                            // grid[currentNode.x + i][currentNode.y + j].weight = currentNode.weight + 10;
                         }
                     }
                 }
@@ -143,11 +155,11 @@ public class Cat {
             }
 
             Node nextNode = open.get(0);
-            for (Node n : open) {
-
-                if (n.weight < nextNode.weight) nextNode = n;
-
-            }
+//            for (Node n : open) {
+//
+//                if (n.weight < nextNode.weight) nextNode = n;
+//
+//            }
             open.remove(nextNode);
             currentNode = nextNode;
 

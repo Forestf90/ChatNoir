@@ -60,15 +60,15 @@ com.badlogic.gdx.graphics.Color: {
 		a: 1
 	}
 	color4: {
-		r: 0.5803922
-		g: 0.627451
-		b: 1
+		r: 0.2745098039215686
+		g: 0.2705882352941176
+		b: 0.0862745098039216
 		a: 1
 	}
 	color4-pressed: {
-		r: 0.12156863
-		g: 1
-		b: 0.9764706
+		r: 0.2745098039215686
+		g: 0.2705882352941176
+		b: 0.0862745098039216
 		a: 1
 	}
 	color5: {
@@ -1115,7 +1115,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 		down: button-oval-c3-p
 	}
 	oval4: {
-		up: button-oval-c4
+		up: button-oval-c3,
 		down: button-oval-c4-p
 	}
 	oval5: {

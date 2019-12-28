@@ -1,12 +1,11 @@
 package com.chatnoir;
 
 public enum Algorithm {
-    Dijkstra,
+    BFS,
     AStar{
         public String toString() {
             return "A*";
         }
-    },
-    DFS
+    }
 
 }

@@ -2,6 +2,7 @@ package com.chatnoir;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -30,6 +32,9 @@ public class ChatNoir extends ApplicationAdapter {
     private Stage stage;
     private Algorithm algorithm;
 
+    private int lastBlockX = 5;
+    private int lastBlockY = 5;
+
     private TextButton animButton;
     private TextButton restartButton;
     private TextButton undoButton;
@@ -38,6 +43,7 @@ public class ChatNoir extends ApplicationAdapter {
     private Label titleLabel;
     private Skin animSkin;
     private BitmapFont font;
+    private Color buttonDefaultColor;
 
     @Override
     public void create() {
@@ -51,7 +57,7 @@ public class ChatNoir extends ApplicationAdapter {
         sr = new ShapeRenderer();
         grid = new Grid();
 
-        algorithm = Algorithm.Dijkstra;
+        algorithm = Algorithm.BFS;
 
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
@@ -64,12 +70,12 @@ public class ChatNoir extends ApplicationAdapter {
         animButton = new TextButton("Animations", animSkin, "toggle");
         animButton.setLabel(new Label("Animations", animSkin));
         animButton.getLabel().setAlignment(Align.center);
-        animButton.setSize(buttonWidth*3, buttonHeight);
-        animButton.setPosition((Gdx.graphics.getWidth() -buttonWidth*3)/2, 50);
+        animButton.setSize(buttonWidth * 3, buttonHeight);
+        animButton.setPosition((Gdx.graphics.getWidth() - buttonWidth * 3) / 2, 50);
         animButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if (!block){
+                if (!block) {
                     grid.animation = false;
                     grid.resetAnimation();
                 }
@@ -82,7 +88,7 @@ public class ChatNoir extends ApplicationAdapter {
         restartButton.setLabel(new Label("Restart", animSkin));
         restartButton.getLabel().setAlignment(Align.center);
         restartButton.setSize(buttonWidth, buttonHeight);
-        restartButton.setPosition(20, 70+buttonHeight);
+        restartButton.setPosition(20, 70 + buttonHeight);
         restartButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -92,21 +98,19 @@ public class ChatNoir extends ApplicationAdapter {
             }
         });
 
-        algorithmButton = new TextButton("Dijkstra", animSkin, "oval3");
-        algorithmButton.setLabel(new Label("Dijkstra", animSkin));
+        algorithmButton = new TextButton(algorithm.toString(), animSkin, "oval3");
+        algorithmButton.setLabel(new Label(algorithm.toString(), animSkin));
         algorithmButton.getLabel().setAlignment(Align.center);
         algorithmButton.setSize(buttonWidth, buttonHeight);
         algorithmButton.setPosition(Gdx.graphics.getWidth() * 0.5f - buttonWidth * 0.5f,
-                70+buttonHeight);
+                70 + buttonHeight);
         algorithmButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if (algorithm == Algorithm.Dijkstra) {
+                if (algorithm == Algorithm.BFS) {
                     algorithm = Algorithm.AStar;
                 } else if (algorithm == Algorithm.AStar) {
-                    algorithm = Algorithm.DFS;
-                } else if (algorithm == Algorithm.DFS) {
-                    algorithm = Algorithm.Dijkstra;
+                    algorithm = Algorithm.BFS;
                 }
                 algorithmButton.getLabel().setText(algorithm.toString());
                 return true;
@@ -117,11 +121,15 @@ public class ChatNoir extends ApplicationAdapter {
         undoButton.setLabel(new Label("Undo", animSkin));
         undoButton.getLabel().setAlignment(Align.center);
         undoButton.setSize(buttonWidth, buttonHeight);
+        undoButton.setTouchable(Touchable.disabled);
+        undoButton.setColor(0.4f, 0.4f, 0.2f, 1);
         undoButton.setPosition(Gdx.graphics.getWidth() - buttonWidth - 20,
-                70+ buttonHeight);
+                70 + buttonHeight);
         undoButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if (!block) return true;
+                undo();
                 return true;
             }
         });
@@ -147,7 +155,7 @@ public class ChatNoir extends ApplicationAdapter {
         cat = new Cat(new Texture("cat.png"));
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font/pacifico/Pacifico.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size =  (int)(Gdx.graphics.getHeight() * 0.04f);
+        parameter.size = (int) (Gdx.graphics.getHeight() * 0.04f);
         font = generator.generateFont(parameter);
         generator.dispose();
         animSkin = new Skin(Gdx.files.internal("skin/lgdxs/lgdxs-ui.json"));
@@ -205,7 +213,12 @@ public class ChatNoir extends ApplicationAdapter {
                             return;
                         }
                         grid.map[i][j].open = false;
-                        cat.findPath(grid.map);
+                        lastBlockX = i;
+                        lastBlockY = j;
+                        undoButton.setTouchable(Touchable.enabled);
+                        undoButton.setColor(restartButton.getColor());
+
+                        cat.findPath(grid.map, algorithm);
                         if (drawAnimation) {
                             grid.animation = true;
                             block = false;
@@ -230,14 +243,23 @@ public class ChatNoir extends ApplicationAdapter {
         cat.setPosY(5);
         cat.getOpen().clear();
         cat.getVisited().clear();
-        if(cat.getPath() != null)cat.getPath().clear();
+        if (cat.getPath() != null) cat.getPath().clear();
         gameRun = true;
         statusLabel.setText("");
+        undoButton.setTouchable(Touchable.disabled);
+        undoButton.setColor(0.4f, 0.4f, 0.2f, 1);
     }
 
     private void gameWin() {
         gameRun = false;
         statusLabel.setText("Cat trapped ! Click restart");
+    }
+
+    private void undo() {
+        cat.undoMove();
+        grid.map[lastBlockX][lastBlockY].open = true;
+        undoButton.setTouchable(Touchable.disabled);
+        undoButton.setColor(0.4f, 0.4f, 0.2f, 1);
     }
 
     @Override
