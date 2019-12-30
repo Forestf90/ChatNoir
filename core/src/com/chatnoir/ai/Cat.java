@@ -94,7 +94,8 @@ public class Cat {
         System.out.println(algorithm.toString());
         if(algorithm == Algorithm.BFS)bfs(map);
         else{
-            calculateHeuristic(map);
+            calculateHeuristic(map, map[0][0].x, map[0][0].y);
+            astar(map, map[0][0]);
         }
     }
 
@@ -111,23 +112,23 @@ public class Cat {
         }
         return grid;
     }
-    private void calculateHeuristic(Node[][] grid){
+    private Node[][] calculateHeuristic(Node[][] grid, int endX, int endY){
 
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[i].length; j++) {
-                int distance = 0;
 
                 int odd = 0;
-                if((j % 2 == 0 && posY % 2 == 1 && i < posX) || ( posY % 2 == 0 && j % 2 == 1 && posX < i)) odd = 1;
-                int dx = Math.abs(posX - i);
-                int dy = Math.abs(posY - j);
-                distance = Math.max(dy, dx + (int)Math.floor(dy/2)+ odd);
+                if((j % 2 == 0 && endY % 2 == 1 && i < endX) || ( endY % 2 == 0 && j % 2 == 1 && endX < i)) odd = 1;
+                int dx = Math.abs(endX - i);
+                int dy = Math.abs(endY - j);
+//                int distance = Math.max(dy, dx + (int)Math.floor(dy/2)+ odd);
 
-                grid[i][j].weight = distance;
-                System.out.print(distance+" ");
+                grid[i][j].weight = Math.max(dy, dx + (int)Math.floor(dy/2)+ odd);
+//                System.out.print(distance+" ");
             }
-            System.out.println();
+//           System.out.println(grid[i][0].weight);
         }
+        return grid;
     }
     private void bfs(Node[][] grid) {
         Node currentNode = grid[posX][posY];
@@ -181,6 +182,77 @@ public class Cat {
 
 
             if (currentNode.x == 0 || currentNode.x == grid.length - 1 || currentNode.y == 0 || currentNode.y == grid.length - 1) {
+                Node lastPathNode = currentNode;
+                visited.add(lastPathNode);
+                route.add(lastPathNode);
+                while (true) {
+                    if (lastPathNode.parent == null) break;
+                    lastPathNode = lastPathNode.parent;
+                    route.add(lastPathNode);
+
+                }
+                this.path = route;
+                return;
+
+
+            }
+
+        }
+    }
+
+    private void astar(Node[][] grid, Node end) {
+        Node currentNode = grid[posX][posY];
+        System.out.print(currentNode.weight);
+        ArrayList<Node> route = new ArrayList<Node>();
+
+        int[] yDirection = {0, -1, -1, 0, 1, 1};
+        int[] xDirectionEven = {-1, -1, 0, 1, -1, 0};
+        int[] xDirectionNotEven = {-1, 0, 1, 1, 0, 1};
+        int[] xDirection;
+
+        while (true) {
+            visited.add(currentNode);
+
+
+            if (currentNode.y % 2 == 0) xDirection = xDirectionEven;
+            else xDirection = xDirectionNotEven;
+            for (int k = 0; k < xDirection.length; k++) {
+                int j = yDirection[k];
+                int i = xDirection[k];
+
+                if (currentNode.x + i < grid.length && currentNode.y + j < grid.length &&
+                        currentNode.x + i > -1 && currentNode.y + j > -1) {
+                    if (grid[currentNode.x + i][currentNode.y + j].open && !visited.contains(grid[currentNode.x + i][currentNode.y + j])) {
+                        if (open.contains(grid[currentNode.x + i][currentNode.y + j])) {
+                            if (grid[currentNode.x + i][currentNode.y + j].weight > grid[currentNode.x][currentNode.y].weight ) {
+                                grid[currentNode.x + i][currentNode.y + j].parent = currentNode;
+                                //grid[currentNode.x + i][currentNode.y + j].weight = currentNode.weight;
+                            }
+                        } else {
+                            grid[currentNode.x + i][currentNode.y + j].parent = currentNode;
+                            open.add(grid[currentNode.x + i][currentNode.y + j]);
+                            //grid[currentNode.x + i][currentNode.y + j].weight = currentNode.weight;
+                        }
+                    }
+                }
+            }
+
+            if (open.size() == 0) {
+                this.path = null;
+                return;
+            }
+
+            Node nextNode = open.get(0);
+            for (Node n : open) {
+
+                if (n.weight < nextNode.weight) nextNode = n;
+
+            }
+            open.remove(nextNode);
+            currentNode = nextNode;
+
+
+            if (currentNode == end) {
                 Node lastPathNode = currentNode;
                 visited.add(lastPathNode);
                 route.add(lastPathNode);
