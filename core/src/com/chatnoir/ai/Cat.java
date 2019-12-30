@@ -92,7 +92,10 @@ public class Cat {
 
         Node[][] map = createGrid(grid);
         System.out.println(algorithm.toString());
-        bfs(map);
+        if(algorithm == Algorithm.BFS)bfs(map);
+        else{
+            calculateHeuristic(map);
+        }
     }
 
     private Node[][] createGrid(Sector[][] map) {
@@ -101,18 +104,31 @@ public class Cat {
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
                 grid[i][j] = new Node();
-//                if (map[i][j].open) grid[i][j].open = true;
-//                else grid[i][j].open = false;
                 grid[i][j].open = map[i][j].open;
                 grid[i][j].x = i;
                 grid[i][j].y = j;
-
             }
         }
-
         return grid;
     }
+    private void calculateHeuristic(Node[][] grid){
 
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                int distance = 0;
+
+                int odd = 0;
+                if((j % 2 == 0 && posY % 2 == 1 && i < posX) || ( posY % 2 == 0 && j % 2 == 1 && posX < i)) odd = 1;
+                int dx = Math.abs(posX - i);
+                int dy = Math.abs(posY - j);
+                distance = Math.max(dy, dx + (int)Math.floor(dy/2)+ odd);
+
+                grid[i][j].weight = distance;
+                System.out.print(distance+" ");
+            }
+            System.out.println();
+        }
+    }
     private void bfs(Node[][] grid) {
         Node currentNode = grid[posX][posY];
         ArrayList<Node> route = new ArrayList<Node>();
