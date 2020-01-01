@@ -99,14 +99,22 @@ public class Grid {
     public void drawAnimation(ShapeRenderer sr, ArrayList<Node> path,
                               ArrayList<Node> visited){
         if(!animation) return;
+        else if(visited.size()==0){
+            resetAnimation();
+            return;
+        }
 
         sr.begin(ShapeRenderer.ShapeType.Filled);
         sr.setColor(Color.valueOf("FFA07A"));
 
         for(int i =0 ;i<iteration; i++){
             Node n =visited.get(i);
+            if(i == iteration-1){
+                sr.setColor(Color.valueOf("00A97A"));
+            }
             sr.circle(map[n.x][n.y].x, map[n.x][n.y].y, map[n.x][n.y].radius);
         }
+
         try
         {
             Thread.sleep(100);

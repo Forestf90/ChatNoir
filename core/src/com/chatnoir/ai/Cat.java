@@ -4,7 +4,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.chatnoir.Algorithm;
 import com.chatnoir.map.Sector;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class Cat {
 
@@ -68,9 +73,6 @@ public class Cat {
         lastY = posY;
         posX = temp.x;
         posY = temp.y;
-        System.out.println("Path: " + path.size());
-        System.out.println("X:" + posX);
-        System.out.println("Y:" + posY);
         open.clear();
         visited.clear();
         path.clear();
@@ -94,8 +96,79 @@ public class Cat {
         System.out.println(algorithm.toString());
         if(algorithm == Algorithm.BFS)bfs(map);
         else{
-            calculateHeuristic(map, map[0][0].x, map[0][0].y);
-            astar(map, map[0][0]);
+
+            Node[][] tempGrid = calculateHeuristic(map, posX, posY);
+
+            List<Node> endNodes = new ArrayList<Node>();
+
+            for(int i=0; i<tempGrid.length; i++){
+                endNodes.add(tempGrid[i][0]);
+                endNodes.add(tempGrid[i][tempGrid.length-1]);
+            }
+
+            for(int i=1; i<tempGrid.length-1; i++){
+                endNodes.add(tempGrid[0][i]);
+                endNodes.add(tempGrid[tempGrid.length-1][i]);
+            }
+
+            Collections.sort(endNodes, new Comparator<Node>() {
+                @Override
+                public int compare(Node n1, Node n2) {
+                    return n1.weight - n2.weight;
+                }
+            });
+            for(Node n: endNodes){
+                System.out.print(n.weight+" ");
+            }
+            int min = endNodes.get(0).weight;
+            ArrayList<Node> minPath = null;
+            ArrayList<Node> minVisited = new ArrayList<Node>();
+            for(Node n: endNodes){
+                if(n.weight > min){
+                    min = n.weight;
+                    if(minPath !=null){
+                        if(minPath.size() <= min+1){
+                            this.path = minPath;
+                            this.visited = minVisited;
+                            break;
+                        }
+                    }
+                }
+
+                Node[][] tempMap = createGrid(grid);
+                calculateHeuristic(tempMap, n.x, n.y);
+                ArrayList<Node> currentPath = astar(tempMap, tempMap[n.x][n.y]);
+
+                if(currentPath == null){
+                    this.open.clear();
+                    this.visited.clear();
+                    this.path = null;
+                    continue;
+                }
+
+                if(minPath == null){
+                    minPath = currentPath;
+                    minVisited.addAll(this.visited);
+                }
+                else if(currentPath.size() < minPath.size()){
+                    minPath = currentPath;
+                    minVisited.addAll(this.visited);
+                }
+
+                if(minPath.size() <= min+1){
+                    this.path = minPath;
+                    this.visited = minVisited;
+                    break;
+                }
+                else {
+                    this.open.clear();
+                    this.visited.clear();
+                }
+            }
+            if(this.path == null){
+                this.visited = minVisited;
+            }
+
         }
     }
 
@@ -200,9 +273,8 @@ public class Cat {
         }
     }
 
-    private void astar(Node[][] grid, Node end) {
+    private ArrayList<Node> astar(Node[][] grid, Node end) {
         Node currentNode = grid[posX][posY];
-        System.out.print(currentNode.weight);
         ArrayList<Node> route = new ArrayList<Node>();
 
         int[] yDirection = {0, -1, -1, 0, 1, 1};
@@ -224,7 +296,7 @@ public class Cat {
                         currentNode.x + i > -1 && currentNode.y + j > -1) {
                     if (grid[currentNode.x + i][currentNode.y + j].open && !visited.contains(grid[currentNode.x + i][currentNode.y + j])) {
                         if (open.contains(grid[currentNode.x + i][currentNode.y + j])) {
-                            if (grid[currentNode.x + i][currentNode.y + j].weight > grid[currentNode.x][currentNode.y].weight ) {
+                            if (grid[currentNode.x + i][currentNode.y + j].weight < grid[currentNode.x][currentNode.y].weight ) {
                                 grid[currentNode.x + i][currentNode.y + j].parent = currentNode;
                                 //grid[currentNode.x + i][currentNode.y + j].weight = currentNode.weight;
                             }
@@ -238,8 +310,8 @@ public class Cat {
             }
 
             if (open.size() == 0) {
-                this.path = null;
-                return;
+                //this.path = null;
+                return null;
             }
 
             Node nextNode = open.get(0);
@@ -262,8 +334,8 @@ public class Cat {
                     route.add(lastPathNode);
 
                 }
-                this.path = route;
-                return;
+                //this.path = route;
+                return route;
 
 
             }
