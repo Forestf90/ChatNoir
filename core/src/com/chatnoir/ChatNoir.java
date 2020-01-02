@@ -43,7 +43,7 @@ public class ChatNoir extends ApplicationAdapter {
     private Label titleLabel;
     private Skin animSkin;
     private BitmapFont font;
-    private Color buttonDefaultColor;
+
 
     @Override
     public void create() {
@@ -149,6 +149,9 @@ public class ChatNoir extends ApplicationAdapter {
         stage.addActor(undoButton);
         stage.addActor(titleLabel);
         stage.addActor(algorithmButton);
+
+
+
     }
 
     private void loadData() {
@@ -187,8 +190,6 @@ public class ChatNoir extends ApplicationAdapter {
         if (!grid.animation && !block) {
             moveCat();
             block = true;
-            //moveCat = false;
-            //zrobic to tylko za pomocą block
         }
 
         if (cat.runAway(grid.map)) {
@@ -225,6 +226,7 @@ public class ChatNoir extends ApplicationAdapter {
                             //moveCat = true;
                         } else moveCat();
 
+
                     }
                 }
             }
@@ -253,6 +255,8 @@ public class ChatNoir extends ApplicationAdapter {
     private void gameWin() {
         gameRun = false;
         statusLabel.setText("Cat trapped ! Click restart");
+        undoButton.setTouchable(Touchable.disabled);
+        undoButton.setColor(0.4f, 0.4f, 0.2f, 1);
     }
 
     private void undo() {
@@ -260,6 +264,7 @@ public class ChatNoir extends ApplicationAdapter {
         grid.map[lastBlockX][lastBlockY].open = true;
         undoButton.setTouchable(Touchable.disabled);
         undoButton.setColor(0.4f, 0.4f, 0.2f, 1);
+
     }
 
     @Override

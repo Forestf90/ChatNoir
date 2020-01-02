@@ -93,7 +93,6 @@ public class Cat {
     public void findPath(Sector[][] grid, Algorithm algorithm) {
 
         Node[][] map = createGrid(grid);
-        System.out.println(algorithm.toString());
         if(algorithm == Algorithm.BFS)bfs(map);
         else{
 
@@ -117,9 +116,7 @@ public class Cat {
                     return n1.weight - n2.weight;
                 }
             });
-            for(Node n: endNodes){
-                System.out.print(n.weight+" ");
-            }
+
             int min = endNodes.get(0).weight;
             ArrayList<Node> minPath = null;
             ArrayList<Node> minVisited = new ArrayList<Node>();
@@ -145,7 +142,6 @@ public class Cat {
                     this.path = null;
                     continue;
                 }
-
                 if(minPath == null){
                     minPath = currentPath;
                     minVisited.addAll(this.visited);
@@ -167,6 +163,9 @@ public class Cat {
             }
             if(this.path == null){
                 this.visited = minVisited;
+                if(minPath !=null){
+                    this.path = minPath;
+                }
             }
 
         }
@@ -194,12 +193,9 @@ public class Cat {
                 if((j % 2 == 0 && endY % 2 == 1 && i < endX) || ( endY % 2 == 0 && j % 2 == 1 && endX < i)) odd = 1;
                 int dx = Math.abs(endX - i);
                 int dy = Math.abs(endY - j);
-//                int distance = Math.max(dy, dx + (int)Math.floor(dy/2)+ odd);
 
                 grid[i][j].weight = Math.max(dy, dx + (int)Math.floor(dy/2)+ odd);
-//                System.out.print(distance+" ");
             }
-//           System.out.println(grid[i][0].weight);
         }
         return grid;
     }
@@ -298,19 +294,16 @@ public class Cat {
                         if (open.contains(grid[currentNode.x + i][currentNode.y + j])) {
                             if (grid[currentNode.x + i][currentNode.y + j].weight < grid[currentNode.x][currentNode.y].weight ) {
                                 grid[currentNode.x + i][currentNode.y + j].parent = currentNode;
-                                //grid[currentNode.x + i][currentNode.y + j].weight = currentNode.weight;
                             }
                         } else {
                             grid[currentNode.x + i][currentNode.y + j].parent = currentNode;
                             open.add(grid[currentNode.x + i][currentNode.y + j]);
-                            //grid[currentNode.x + i][currentNode.y + j].weight = currentNode.weight;
                         }
                     }
                 }
             }
 
             if (open.size() == 0) {
-                //this.path = null;
                 return null;
             }
 
@@ -334,10 +327,7 @@ public class Cat {
                     route.add(lastPathNode);
 
                 }
-                //this.path = route;
                 return route;
-
-
             }
 
         }

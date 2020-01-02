@@ -101,6 +101,7 @@ public class Grid {
         if(!animation) return;
         else if(visited.size()==0){
             resetAnimation();
+            System.out.println("no visited");
             return;
         }
 
