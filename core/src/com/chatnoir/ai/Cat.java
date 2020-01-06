@@ -7,9 +7,7 @@ import com.chatnoir.map.Sector;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class Cat {
 
@@ -71,8 +69,8 @@ public class Cat {
         Node temp = path.get(path.size() - 2);
         lastX = posX;
         lastY = posY;
-        posX = temp.x;
-        posY = temp.y;
+        posX = temp.getX();
+        posY = temp.getY();
         open.clear();
         visited.clear();
         path.clear();
@@ -114,16 +112,16 @@ public class Cat {
             Collections.sort(endNodes, new Comparator<Node>() {
                 @Override
                 public int compare(Node n1, Node n2) {
-                    return n1.weight - n2.weight;
+                    return n1.getWeight() - n2.getWeight();
                 }
             });
 
-            int min = endNodes.get(0).weight;
+            int min = endNodes.get(0).getWeight();
             ArrayList<Node> minPath = null;
             ArrayList<Node> minVisited = new ArrayList<Node>();
             for (Node n : endNodes) {
-                if (n.weight > min) {
-                    min = n.weight;
+                if (n.getWeight() > min) {
+                    min = n.getWeight();
                     if (minPath != null) {
                         if (minPath.size() <= min + 1) {
                             this.path = minPath;
@@ -134,8 +132,8 @@ public class Cat {
                 }
 
                 Node[][] tempMap = createGrid(grid);
-                calculateHeuristic(tempMap, n.x, n.y);
-                ArrayList<Node> currentPath = astar(tempMap, tempMap[n.x][n.y]);
+                calculateHeuristic(tempMap, n.getX(), n.getY());
+                ArrayList<Node> currentPath = astar(tempMap, tempMap[n.getX()][n.getY()]);
 
                 if (currentPath == null) {
                     this.open.clear();
@@ -172,9 +170,9 @@ public class Cat {
         long d2 = System.nanoTime();
         long diff = d2 - d1;
 
-       // long seconds = TimeUnit.MILLISECONDS.toSeconds(diff);
+        // long seconds = TimeUnit.MILLISECONDS.toSeconds(diff);
 
-        System.out.println(algorithm.toString()+": "+diff);
+        System.out.println(algorithm.toString() + ": " + diff);
     }
 
     private Node[][] createGrid(Sector[][] map) {
@@ -183,9 +181,9 @@ public class Cat {
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
                 grid[i][j] = new Node();
-                grid[i][j].open = map[i][j].open;
-                grid[i][j].x = i;
-                grid[i][j].y = j;
+                grid[i][j].setOpen(map[i][j].open);
+                grid[i][j].setX(i);
+                grid[i][j].setY(j);
             }
         }
         return grid;
@@ -202,7 +200,7 @@ public class Cat {
                 int dx = Math.abs(endX - i);
                 int dy = Math.abs(endY - j);
 
-                grid[i][j].weight = Math.max(dy, dx + (int) Math.floor(dy / 2) + odd);
+                grid[i][j].setWeight(Math.max(dy, dx + (int) Math.floor(dy / 2) + odd));
             }
         }
         return grid;
@@ -219,26 +217,21 @@ public class Cat {
 
         while (true) {
             visited.add(currentNode);
+            int x = currentNode.getX();
+            int y = currentNode.getY();
 
-
-            if (currentNode.y % 2 == 0) xDirection = xDirectionEven;
+            if (y % 2 == 0) xDirection = xDirectionEven;
             else xDirection = xDirectionNotEven;
             for (int k = 0; k < xDirection.length; k++) {
                 int j = yDirection[k];
                 int i = xDirection[k];
 
-                if (currentNode.x + i < grid.length && currentNode.y + j < grid.length &&
-                        currentNode.x + i > -1 && currentNode.y + j > -1) {
-                    if (grid[currentNode.x + i][currentNode.y + j].open && !visited.contains(grid[currentNode.x + i][currentNode.y + j])) {
-                        if (open.contains(grid[currentNode.x + i][currentNode.y + j])) {
-//                            if (grid[currentNode.x + i][currentNode.y + j].parent.weight > grid[currentNode.x][currentNode.y].weight + 10) {
-//                                grid[currentNode.x + i][currentNode.y + j].parent = currentNode;
-//                                grid[currentNode.x + i][currentNode.y + j].weight = currentNode.weight + 10;
-//                            }
-                        } else {
-                            grid[currentNode.x + i][currentNode.y + j].parent = currentNode;
-                            open.add(grid[currentNode.x + i][currentNode.y + j]);
-                            // grid[currentNode.x + i][currentNode.y + j].weight = currentNode.weight + 10;
+                if (x + i < grid.length && y + j < grid.length &&
+                        x + i > -1 && y + j > -1) {
+                    if (grid[x + i][y + j].isOpen() && !visited.contains(grid[x + i][y + j])) {
+                        if (!open.contains(grid[x + i][y + j])) {
+                            grid[x + i][y + j].setParent(currentNode);
+                            open.add(grid[x + i][y + j]);
                         }
                     }
                 }
@@ -250,22 +243,18 @@ public class Cat {
             }
 
             Node nextNode = open.get(0);
-//            for (Node n : open) {
-//
-//                if (n.weight < nextNode.weight) nextNode = n;
-//
-//            }
             open.remove(nextNode);
             currentNode = nextNode;
 
 
-            if (currentNode.x == 0 || currentNode.x == grid.length - 1 || currentNode.y == 0 || currentNode.y == grid.length - 1) {
+            if (currentNode.getX() == 0 || currentNode.getX() == grid.length - 1 ||
+                    currentNode.getY() == 0 || currentNode.getY() == grid.length - 1) {
                 Node lastPathNode = currentNode;
                 visited.add(lastPathNode);
                 route.add(lastPathNode);
                 while (true) {
-                    if (lastPathNode.parent == null) break;
-                    lastPathNode = lastPathNode.parent;
+                    if (lastPathNode.getParent() == null) break;
+                    lastPathNode = lastPathNode.getParent();
                     route.add(lastPathNode);
 
                 }
@@ -289,24 +278,25 @@ public class Cat {
 
         while (true) {
             visited.add(currentNode);
+            int x = currentNode.getX();
+            int y = currentNode.getY();
 
-
-            if (currentNode.y % 2 == 0) xDirection = xDirectionEven;
+            if (y % 2 == 0) xDirection = xDirectionEven;
             else xDirection = xDirectionNotEven;
             for (int k = 0; k < xDirection.length; k++) {
                 int j = yDirection[k];
                 int i = xDirection[k];
 
-                if (currentNode.x + i < grid.length && currentNode.y + j < grid.length &&
-                        currentNode.x + i > -1 && currentNode.y + j > -1) {
-                    if (grid[currentNode.x + i][currentNode.y + j].open && !visited.contains(grid[currentNode.x + i][currentNode.y + j])) {
-                        if (open.contains(grid[currentNode.x + i][currentNode.y + j])) {
-                            if (grid[currentNode.x + i][currentNode.y + j].weight < grid[currentNode.x][currentNode.y].weight) {
-                                grid[currentNode.x + i][currentNode.y + j].parent = currentNode;
+                if (x + i < grid.length && y + j < grid.length &&
+                        x + i > -1 && y + j > -1) {
+                    if (grid[x + i][y + j].isOpen() && !visited.contains(grid[x + i][y + j])) {
+                        if (open.contains(grid[x + i][y + j])) {
+                            if (grid[x + i][y + j].getWeight() < grid[x][y].getWeight()) {
+                                grid[x + i][y + j].setParent(currentNode);
                             }
                         } else {
-                            grid[currentNode.x + i][currentNode.y + j].parent = currentNode;
-                            open.add(grid[currentNode.x + i][currentNode.y + j]);
+                            grid[x + i][y + j].setParent(currentNode);
+                            open.add(grid[x + i][y + j]);
                         }
                     }
                 }
@@ -319,7 +309,7 @@ public class Cat {
             Node nextNode = open.get(0);
             for (Node n : open) {
 
-                if (n.weight < nextNode.weight) nextNode = n;
+                if (n.getWeight() < nextNode.getWeight()) nextNode = n;
 
             }
             open.remove(nextNode);
@@ -331,8 +321,8 @@ public class Cat {
                 visited.add(lastPathNode);
                 route.add(lastPathNode);
                 while (true) {
-                    if (lastPathNode.parent == null) break;
-                    lastPathNode = lastPathNode.parent;
+                    if (lastPathNode.getParent() == null) break;
+                    lastPathNode = lastPathNode.getParent();
                     route.add(lastPathNode);
 
                 }

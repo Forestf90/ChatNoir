@@ -160,7 +160,7 @@ public class ChatNoir extends ApplicationAdapter {
         font = generator.generateFont(parameter);
         generator.dispose();
         animSkin = new Skin(Gdx.files.internal("skin/lgdxs/lgdxs-ui.json"));
-        //"skin/default/uiskin.json"
+
     }
 
     @Override
@@ -200,7 +200,6 @@ public class ChatNoir extends ApplicationAdapter {
     private void handleInput() {
         if (!block) return;
         if (Gdx.input.isTouched()) {
-            //Vector2 touch = new Vector2(Gdx.input.getX(), Gdx.input.getY()-1-Gdx.input.getY());
             int x = Gdx.input.getX();
             int y = Gdx.graphics.getHeight() - Gdx.input.getY();
 
@@ -221,7 +220,6 @@ public class ChatNoir extends ApplicationAdapter {
                         if (drawAnimation) {
                             grid.animation = true;
                             block = false;
-                            //moveCat = true;
                         } else moveCat();
 
 

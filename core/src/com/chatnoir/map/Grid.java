@@ -113,7 +113,9 @@ public class Grid {
             if (i == iteration - 1) {
                 sr.setColor(Color.valueOf("00A97A"));
             }
-            sr.circle(map[n.x][n.y].x, map[n.x][n.y].y, map[n.x][n.y].radius);
+            int x = n.getX();
+            int y = n.getY();
+            sr.circle(map[x][y].x, map[x][y].y, map[x][y].radius);
         }
 
         try {
@@ -137,7 +139,9 @@ public class Grid {
             sr.setColor(Color.valueOf("cc0000"));
             for (int i = 0; i < iterationPath; i++) {
                 Node n = path.get(path.size() - i - 1);
-                sr.circle(map[n.x][n.y].x, map[n.x][n.y].y, map[n.x][n.y].radius);
+                int x = n.getX();
+                int y = n.getY();
+                sr.circle(map[x][y].x, map[x][y].y, map[x][y].radius);
             }
             try {
                 Thread.sleep(100);
