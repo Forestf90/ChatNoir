@@ -90,7 +90,6 @@ public class Cat {
 
     public void findPath(Sector[][] grid, Algorithm algorithm) {
 
-        long d1 = System.nanoTime();
         Node[][] map = createGrid(grid);
         if (algorithm == Algorithm.BFS) bfs(map);
         else {
@@ -167,12 +166,6 @@ public class Cat {
 
         }
 
-        long d2 = System.nanoTime();
-        long diff = d2 - d1;
-
-        // long seconds = TimeUnit.MILLISECONDS.toSeconds(diff);
-
-        System.out.println(algorithm.toString() + ": " + diff);
     }
 
     private Node[][] createGrid(Sector[][] map) {

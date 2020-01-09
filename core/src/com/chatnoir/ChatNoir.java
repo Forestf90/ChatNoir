@@ -192,7 +192,7 @@ public class ChatNoir extends ApplicationAdapter {
 
         if (cat.runAway(grid.map)) {
             gameRun = false;
-            statusLabel.setText("Cat esceped ! Click restart");
+            statusLabel.setText("Cat escaped ! Click restart");
         }
 
     }
