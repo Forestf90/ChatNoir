@@ -193,6 +193,8 @@ public class ChatNoir extends ApplicationAdapter {
         if (cat.runAway(grid.map)) {
             gameRun = false;
             statusLabel.setText("Cat escaped ! Click restart");
+            undoButton.setTouchable(Touchable.disabled);
+            undoButton.setColor(0.4f, 0.4f, 0.2f, 1);
         }
 
     }
