@@ -12,6 +12,7 @@ Cat can use breadth-first search algorithm or A* to find shortest path to escape
 |   A*   |  BFS  |
 |--------|-------|
 |![](android/res/chat_astar.gif) | ![](android/res/chat_bfs.gif)|
+
 There are option to undo turn but it can be use only once per move.
 
 
